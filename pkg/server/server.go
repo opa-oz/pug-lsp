@@ -49,6 +49,8 @@ func NewServer(opts ServerOpts) *Server {
 	handler.Initialized = server.initialized
 	handler.SetTrace = server.setTrace
 	handler.Shutdown = server.shutdown
+	handler.TextDocumentDidOpen = server.TextDocumentDidOpen
+	handler.TextDocumentDidChange = server.TextDocumentDidChange
 
 	return &server
 }
