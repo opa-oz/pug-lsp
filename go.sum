@@ -15,6 +15,14 @@ github.com/mattn/go-runewidth v0.0.14 h1:+xnbZSEeDbOIg5/mE6JF0w6n9duR1l3/WmbinWV
 github.com/mattn/go-runewidth v0.0.14/go.mod h1:Jdepj2loyihRzMpdS35Xk/zdY8IAYHsh153qUoGf23w=
 github.com/muesli/termenv v0.15.2 h1:GohcuySI0QmI3wN8Ok9PtKGkgkFIk7y6Vpb5PvrY+Wo=
 github.com/muesli/termenv v0.15.2/go.mod h1:Epx+iuz8sNs7mNKhxzH4fWXGNpZwUaJKRS1noLXviQ8=
+github.com/opa-oz/go-todo v0.0.0-20240603095943-a6c9b9fd5f51 h1:plK2cyw9SqIo3A49Uivet4XMlfhg6LL+0VFsULinK/Q=
+github.com/opa-oz/go-todo v0.0.0-20240603095943-a6c9b9fd5f51/go.mod h1:YsY09ClQAvtibuKCoz9yAi5WVombjWSfvKwtQSE2FIo=
+github.com/opa-oz/go-todo v0.0.0-20240603120142-bcc338a5156a h1:DbP3Fpdy/ESbLh5CdL2iPnhDz9vrAjzoIl7jCZthv4Y=
+github.com/opa-oz/go-todo v0.0.0-20240603120142-bcc338a5156a/go.mod h1:uC4E2t+lmbL8oRvNSJ1ztnSBZkaNIa89vGr4vo/m0Lc=
+github.com/opa-oz/go-todo v0.0.2 h1:kdJU446ms1pQBI7Y4oGV+26W1YmvlZhPHmu1ipik/bk=
+github.com/opa-oz/go-todo v0.0.2/go.mod h1:uC4E2t+lmbL8oRvNSJ1ztnSBZkaNIa89vGr4vo/m0Lc=
+github.com/opa-oz/go-todo v0.0.3 h1:8A4EH1RTIKsg1AAbDSKVxtFik+9LopF96rcnIetR4Kg=
+github.com/opa-oz/go-todo v0.0.3/go.mod h1:uC4E2t+lmbL8oRvNSJ1ztnSBZkaNIa89vGr4vo/m0Lc=
 github.com/petermattis/goid v0.0.0-20180202154549-b0b1615b78e5 h1:q2e307iGHPdTGp0hoxKjt1H5pDo6utceo3dQVK3I5XQ=
 github.com/petermattis/goid v0.0.0-20180202154549-b0b1615b78e5/go.mod h1:jvVRKCrJTQWu0XVbaOlby/2lO20uSCHEMzzplHXte1o=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=

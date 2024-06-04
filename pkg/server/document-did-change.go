@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 
+	"github.com/opa-oz/go-todo/todo"
 	"github.com/tliron/glsp"
 	protocol "github.com/tliron/glsp/protocol_3_16"
 )
@@ -13,8 +14,9 @@ func (s *Server) TextDocumentDidChange(ctx *glsp.Context, params *protocol.DidCh
 	if !ok {
 		return nil
 	}
-	s.logger.Println("DocDidChange", doc.Path)
 	doc.ApplyChanges(context.Background(), params.ContentChanges)
-	// todo: refresh diagnostics maybe?
+
+	todo.T("Refresh diagnostics")
+
 	return nil
 }

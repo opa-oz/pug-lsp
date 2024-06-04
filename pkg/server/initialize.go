@@ -8,9 +8,12 @@ import (
 func (s *Server) initialize(context *glsp.Context, params *protocol.InitializeParams) (any, error) {
 	s.clientCapabilities = params.Capabilities
 
+	ptrTrue := true
+
 	capabilities := s.handler.CreateServerCapabilities()
 	capabilities.CompletionProvider = &protocol.CompletionOptions{
-		// TriggerCharacters: []string{":"},
+		TriggerCharacters: []string{"+", "("},
+		ResolveProvider:   &ptrTrue,
 	}
 
 	return protocol.InitializeResult{

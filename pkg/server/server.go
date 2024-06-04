@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/opa-oz/go-todo/todo"
 	"github.com/opa-oz/pug-lsp/pkg/documents"
 	"github.com/opa-oz/pug-lsp/pkg/utils"
 	"github.com/pkg/errors"
@@ -36,6 +37,8 @@ func NewServer(opts ServerOpts) *Server {
 	handler := protocol.Handler{}
 	glspServer := glsps.NewServer(&handler, opts.Name, opts.Debug)
 
+	todo.Opts.AttachLogger(logger.Logger)
+
 	server := Server{
 		documentStore:      documents.NewDocumentStore(logger, *fs),
 		logger:             logger,
@@ -51,6 +54,7 @@ func NewServer(opts ServerOpts) *Server {
 	handler.Shutdown = server.shutdown
 	handler.TextDocumentDidOpen = server.TextDocumentDidOpen
 	handler.TextDocumentDidChange = server.TextDocumentDidChange
+	handler.TextDocumentCompletion = server.TextDocumentCompletion
 
 	return &server
 }

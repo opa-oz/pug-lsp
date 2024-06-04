@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 
+	"github.com/opa-oz/go-todo/todo"
 	"github.com/tliron/glsp"
 	protocol "github.com/tliron/glsp/protocol_3_16"
 )
@@ -14,9 +15,7 @@ func (s *Server) TextDocumentDidOpen(ctx *glsp.Context, params *protocol.DidOpen
 		return err
 	}
 
-	s.logger.Println("DocDidOpen", doc.Path)
-
-	// todo: refresh diagnostics maybe?
+	todo.T("Refresh diagnostics", doc.Path)
 
 	return nil
 }
