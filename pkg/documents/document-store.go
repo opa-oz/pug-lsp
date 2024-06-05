@@ -2,8 +2,11 @@ package documents
 
 import (
 	"context"
+	"strings"
 
+	"github.com/opa-oz/pug-lsp/pkg/lsp"
 	"github.com/opa-oz/pug-lsp/pkg/pug"
+	"github.com/opa-oz/pug-lsp/pkg/query"
 	"github.com/opa-oz/pug-lsp/pkg/utils"
 	"github.com/pkg/errors"
 	"github.com/tliron/glsp"
@@ -50,6 +53,41 @@ func (ds *DocumentStore) DocumentDidOpen(ctx context.Context, params protocol.Di
 	ds.documents[path] = doc
 
 	return doc, nil
+}
+
+func (ds *DocumentStore) RefreshIncludes(ctx context.Context, doc *Document) {
+	includes, err := query.FindIncludes(doc.Tree)
+	if err != nil {
+		ds.logger.Err(err)
+	}
+
+	ds.logger.Println("Main doc", doc.Path)
+
+	for _, strRange := range *includes {
+		original := strings.Trim(doc.Content[strRange.StartPos:strRange.EndPos], " ")
+		uri := ds.partialToUri(original, doc)
+
+		newInclude := lsp.NewInclude(&original, &uri)
+		doc.Includes = append(doc.Includes, newInclude)
+		ds.logger.Println("Include found", *newInclude.Original, *newInclude.Path, *newInclude.Prefix)
+	}
+}
+
+func (ds *DocumentStore) partialToUri(original string, doc *Document) string {
+	parentParts := strings.Split(doc.Path, "/")
+	parentFolder := parentParts[0 : len(parentParts)-1] // end of path is always file, remove it
+	includeParts := strings.Split(original, "/")
+	includeFilename := includeParts[len(includeParts)-1]
+
+	if !strings.Contains(includeFilename, ".pug") {
+		includeFilename = includeFilename + ".pug"
+	}
+
+	parentFolder = append(parentFolder, includeParts[0:len(includeParts)-1]...)
+	parentFolder = append(parentFolder, includeFilename)
+
+	return strings.Join(parentFolder, "/")
+
 }
 
 func (ds *DocumentStore) normalizeFilepath(uri string) (string, error) {

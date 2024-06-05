@@ -3,6 +3,7 @@ package documents
 import (
 	"context"
 
+	"github.com/opa-oz/pug-lsp/pkg/lsp"
 	"github.com/opa-oz/pug-lsp/pkg/pug"
 	"github.com/pkg/errors"
 	sitter "github.com/smacker/go-tree-sitter"
@@ -10,10 +11,11 @@ import (
 )
 
 type Document struct {
-	URI     protocol.DocumentUri
-	Path    string
-	Tree    *sitter.Tree
-	Content string
+	URI      protocol.DocumentUri
+	Path     string
+	Tree     *sitter.Tree
+	Content  string
+	Includes []*lsp.Include
 }
 
 // ApplyChanges updates the content of the Document from LSP textDocument/didChange events.

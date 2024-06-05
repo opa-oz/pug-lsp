@@ -17,5 +17,7 @@ func (s *Server) TextDocumentDidOpen(ctx *glsp.Context, params *protocol.DidOpen
 
 	todo.T("Refresh diagnostics", doc.Path)
 
+	s.documentStore.RefreshIncludes(context.Background(), doc)
+
 	return nil
 }

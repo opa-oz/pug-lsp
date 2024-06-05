@@ -22,7 +22,7 @@ func (s *Server) TextDocumentCompletion(ctx *glsp.Context, params *protocol.Comp
 		switch *params.Context.TriggerCharacter {
 		case "(":
 			todo.T("Append tag-specific attributes")
-			globalAttrs := html.GlobalTags()
+			globalAttrs := html.GlobalAttrs()
 
 			for _, attr := range *globalAttrs {
 				attrCopy := attr // Create a copy of attr

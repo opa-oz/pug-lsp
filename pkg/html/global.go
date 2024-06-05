@@ -1,6 +1,6 @@
 package html
 
-var globalTags = []string{
+var globalAttributes = []string{
 	"accesskey",
 	// "class", // commented because classes in Pug are done via `.`
 	"contenteditable",
@@ -21,6 +21,6 @@ var globalTags = []string{
 	"translate",
 }
 
-func GlobalTags() *[]string {
-	return &globalTags
+func GlobalAttrs() *[]string {
+	return &globalAttributes
 }

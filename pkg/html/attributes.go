@@ -33,8 +33,8 @@ var allVisible = []string{
 	"onwheel",
 }
 
-var tagToAttributes = map[string][]string{
-	"input": {
+var tagToAttributes = map[HtmlTag]*[]string{
+	Input: {
 		"accept",
 		"alt",
 		"autocomplete",
@@ -66,7 +66,7 @@ var tagToAttributes = map[string][]string{
 		"value",
 		"width",
 	},
-	"form": {
+	Form: {
 		"accept-charset",
 		"action",
 		"autocomplete",
@@ -79,7 +79,7 @@ var tagToAttributes = map[string][]string{
 		"rel",
 		"target",
 	},
-	"area": {
+	Area: {
 		"alt",
 		"coords",
 		"download",
@@ -90,7 +90,7 @@ var tagToAttributes = map[string][]string{
 		"shape",
 		"target",
 	},
-	"img": {
+	Img: {
 		"alt",
 		"height",
 		"ismap",
@@ -103,7 +103,7 @@ var tagToAttributes = map[string][]string{
 		"usemap",
 		"width",
 	},
-	"script": {
+	Script: {
 		"async",
 		"charset",
 		"defer",
@@ -112,7 +112,7 @@ var tagToAttributes = map[string][]string{
 		"src",
 		"type",
 	},
-	"button": {
+	Button: {
 		"autofocus",
 		"disabled",
 		"form",
@@ -123,7 +123,7 @@ var tagToAttributes = map[string][]string{
 		"type",
 		"value",
 	},
-	"select": {
+	Select: {
 		"autofocus",
 		"disabled",
 		"form",
@@ -132,7 +132,7 @@ var tagToAttributes = map[string][]string{
 		"required",
 		"size",
 	},
-	"textarea": {
+	Textarea: {
 		"autofocus",
 		"cols",
 		"dirname",
@@ -146,7 +146,7 @@ var tagToAttributes = map[string][]string{
 		"rows",
 		"wrap",
 	},
-	"audio": {
+	Audio: {
 		"autoplay",
 		"controls",
 		"loop",
@@ -176,7 +176,7 @@ var tagToAttributes = map[string][]string{
 		"preload",
 		"src",
 	},
-	"video": {
+	Video: {
 		"autoplay",
 		"controls",
 		"height",
@@ -209,38 +209,38 @@ var tagToAttributes = map[string][]string{
 		"src",
 		"width",
 	},
-	"meta": {
+	Meta: {
 		"charset",
 		"content",
 		"http-equiv",
 		"name",
 	},
-	"blockquote": {
+	Blockquote: {
 		"cite",
 	},
-	"del": {
-		"cite",
-		"datetime",
-	},
-	"ins": {
+	Del: {
 		"cite",
 		"datetime",
 	},
-	"q": {
+	Ins: {
+		"cite",
+		"datetime",
+	},
+	Q: {
 		"cite",
 	},
-	"td": {
+	Td: {
 		"colspan",
 		"headers",
 		"rowspan",
 	},
-	"th": {
+	Th: {
 		"colspan",
 		"headers",
 		"rowspan",
 		"scope",
 	},
-	"object": {
+	Object: {
 		"data",
 		"form",
 		"height",
@@ -252,10 +252,10 @@ var tagToAttributes = map[string][]string{
 		"usemap",
 		"width",
 	},
-	"time": {
+	Time: {
 		"datetime",
 	},
-	"track": {
+	Track: {
 		"default",
 		"kind",
 		"label",
@@ -263,22 +263,22 @@ var tagToAttributes = map[string][]string{
 		"src",
 		"srclang",
 	},
-	"fieldset": {
+	Fieldset: {
 		"disabled",
 		"form",
 		"name",
 	},
-	"optgroup": {
+	OptGroup: {
 		"disabled",
 		"label",
 	},
-	"option": {
+	Option: {
 		"disabled",
 		"label",
 		"selected",
 		"value",
 	},
-	"a": {
+	A: {
 		"download",
 		"href",
 		"hreflang",
@@ -287,16 +287,16 @@ var tagToAttributes = map[string][]string{
 		"target",
 		"type",
 	},
-	"label": {
+	Label: {
 		"for",
 		"form",
 	},
-	"output": {
+	Output: {
 		"for",
 		"form",
 		"name",
 	},
-	"meter": {
+	Meter: {
 		"form",
 		"high",
 		"low",
@@ -305,11 +305,11 @@ var tagToAttributes = map[string][]string{
 		"optimum",
 		"value",
 	},
-	"canvas": {
+	Canvas: {
 		"height",
 		"width",
 	},
-	"embed": {
+	Embed: {
 		"height",
 		"onabort",
 		"oncanplay",
@@ -318,7 +318,7 @@ var tagToAttributes = map[string][]string{
 		"type",
 		"width",
 	},
-	"iframe": {
+	IFrame: {
 		"height",
 		"name",
 		"onload",
@@ -327,11 +327,11 @@ var tagToAttributes = map[string][]string{
 		"srcdoc",
 		"width",
 	},
-	"base": {
+	Base: {
 		"href",
 		"target",
 	},
-	"link": {
+	Link: {
 		"href",
 		"hreflang",
 		"media",
@@ -340,31 +340,31 @@ var tagToAttributes = map[string][]string{
 		"sizes",
 		"type",
 	},
-	"progress": {
+	Progress: {
 		"max",
 		"value",
 	},
-	"source": {
+	Source: {
 		"media",
 		"sizes",
 		"src",
 		"srcset",
 		"type",
 	},
-	"style": {
+	Style: {
 		"media",
 		"onerror",
 		"onload",
 		"type",
 	},
-	"map": {
+	Map: {
 		"name",
 	},
-	"param": {
+	Param: {
 		"name",
 		"value",
 	},
-	"body": {
+	Body: {
 		"onafterprint",
 		"onbeforeprint",
 		"onbeforeunload",
@@ -380,62 +380,64 @@ var tagToAttributes = map[string][]string{
 		"onstorage",
 		"onunload",
 	},
-	"details": {
+	Details: {
 		"ontoggle",
 		"open",
 	},
-	"ol": {
+	Ol: {
 		"reversed",
 		"start",
 	},
-	"col": {
+	Col: {
 		"span",
 	},
-	"colgroup": {
+	ColGroup: {
 		"span",
 	},
-	"menu": {
+	Menu: {
 		"type",
 	},
-	"li": {
+	Li: {
 		"value",
 	},
-	"div":     allVisible,
-	"span":    allVisible,
-	"h1":      allVisible,
-	"h2":      allVisible,
-	"h3":      allVisible,
-	"h4":      allVisible,
-	"h5":      allVisible,
-	"h6":      allVisible,
-	"p":       allVisible,
-	"pre":     allVisible,
-	"table":   allVisible,
-	"hr":      allVisible,
-	"head":    allVisible,
-	"header":  allVisible,
-	"footer":  allVisible,
-	"article": allVisible,
-	"main":    allVisible,
-	"title":   allVisible,
-	"tr":      allVisible,
-	"html":    {},
+	Div:     &allVisible,
+	Span:    &allVisible,
+	H1:      &allVisible,
+	H2:      &allVisible,
+	H3:      &allVisible,
+	H4:      &allVisible,
+	H5:      &allVisible,
+	H6:      &allVisible,
+	P:       &allVisible,
+	Pre:     &allVisible,
+	Table:   &allVisible,
+	HR:      &allVisible,
+	Head:    &allVisible,
+	Header:  &allVisible,
+	Footer:  &allVisible,
+	Article: &allVisible,
+	Main:    &allVisible,
+	Title:   &allVisible,
+	Tr:      &allVisible,
+	Html:    &allVisible,
 }
 
 func GetAttributes(tagName string) *[]string {
-	arr, ok := tagToAttributes[tagName]
+	tagHtmlName := string(tagName)
+	arr, ok := tagToAttributes[HtmlTag(tagHtmlName)]
 
 	if !ok {
 		return nil
 	}
 
-	return &arr
+	return arr
 }
 
 func GetTags() *[]string {
 	keys := make([]string, 0, len(tagToAttributes))
 	for k := range tagToAttributes {
-		keys = append(keys, k)
+		htmlK := string(k)
+		keys = append(keys, htmlK)
 	}
 
 	return &keys
