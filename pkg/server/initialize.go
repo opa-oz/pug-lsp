@@ -12,7 +12,7 @@ func (s *Server) initialize(context *glsp.Context, params *protocol.InitializePa
 
 	capabilities := s.handler.CreateServerCapabilities()
 	capabilities.CompletionProvider = &protocol.CompletionOptions{
-		TriggerCharacters: []string{"+", "("},
+		TriggerCharacters: []string{"+", "(", ","},
 		ResolveProvider:   &ptrTrue,
 	}
 

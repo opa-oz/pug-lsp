@@ -15,6 +15,7 @@ func (s *Server) TextDocumentDidChange(ctx *glsp.Context, params *protocol.DidCh
 		return nil
 	}
 	doc.ApplyChanges(context.Background(), params.ContentChanges)
+	s.logger.Println("Applied changes")
 
 	todo.T("Refresh diagnostics")
 

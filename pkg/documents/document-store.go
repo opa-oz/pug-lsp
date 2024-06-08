@@ -46,7 +46,7 @@ func (ds *DocumentStore) DocumentDidOpen(ctx context.Context, params protocol.Di
 	doc := &Document{
 		URI:     uri,
 		Path:    path,
-		Content: params.TextDocument.Text,
+		Content: &params.TextDocument.Text,
 		Tree:    tree,
 	}
 
@@ -62,9 +62,9 @@ func (ds *DocumentStore) RefreshIncludes(ctx context.Context, doc *Document) {
 	}
 
 	ds.logger.Println("Main doc", doc.Path)
-
+	originalContent := *doc.Content
 	for _, strRange := range *includes {
-		original := strings.Trim(doc.Content[strRange.StartPos:strRange.EndPos], " ")
+		original := strings.Trim(originalContent[strRange.StartPos:strRange.EndPos], " ")
 		uri := ds.partialToUri(original, doc)
 
 		newInclude := lsp.NewInclude(&original, &uri)

@@ -3,6 +3,7 @@ package documents
 import (
 	"context"
 
+	"github.com/opa-oz/go-todo/todo"
 	"github.com/opa-oz/pug-lsp/pkg/lsp"
 	"github.com/opa-oz/pug-lsp/pkg/pug"
 	"github.com/pkg/errors"
@@ -14,7 +15,7 @@ type Document struct {
 	URI      protocol.DocumentUri
 	Path     string
 	Tree     *sitter.Tree
-	Content  string
+	Content  *string
 	Includes []*lsp.Include
 }
 
@@ -23,19 +24,52 @@ func (d *Document) ApplyChanges(ctx context.Context, changes []interface{}) erro
 	for _, change := range changes {
 		switch c := change.(type) {
 		case protocol.TextDocumentContentChangeEvent:
-			startIndex, endIndex := c.Range.IndexesIn(d.Content)
-			d.Content = d.Content[:startIndex] + c.Text + d.Content[endIndex:]
+			originalContent := *d.Content
+			startIndex, endIndex := c.Range.IndexesIn(originalContent)
+			modified := originalContent[:startIndex] + c.Text + originalContent[endIndex:]
+			d.Content = &modified
 		case protocol.TextDocumentContentChangeEventWhole:
-			d.Content = c.Text
+			d.Content = &c.Text
 		}
 	}
 
-	newTree, err := pug.UpdateParsedTreeFromString(ctx, d.Tree, d.Content)
+	newTree, err := pug.UpdateParsedTreeFromString(ctx, d.Tree, *d.Content)
 	if err != nil {
 		return errors.Wrapf(err, "undable to update content: %s", d.Path)
 	}
 
+	todo.T("Applied changes")
 	d.Tree = newTree
 
 	return nil
+}
+
+func (d *Document) GetAtPosition(position *protocol.Position) *sitter.Node {
+	node := d.Tree.RootNode().NamedDescendantForPointRange(
+		sitter.Point{
+			Row:    position.Line,
+			Column: position.Character,
+		},
+		sitter.Point{
+			Row:    position.Line,
+			Column: position.Character,
+		},
+	)
+
+	return node
+}
+
+func (d *Document) GetBeforeTrigger(position *protocol.Position) *sitter.Node {
+	node := d.Tree.RootNode().NamedDescendantForPointRange(
+		sitter.Point{
+			Row:    position.Line,
+			Column: position.Character - 2,
+		},
+		sitter.Point{
+			Row:    position.Line,
+			Column: position.Character - 2,
+		},
+	)
+
+	return node
 }

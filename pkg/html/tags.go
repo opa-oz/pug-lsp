@@ -68,4 +68,5 @@ const (
 	Title      HtmlTag = "title"
 	Tr         HtmlTag = "tr"
 	Html       HtmlTag = "html"
+	Doctype    HtmlTag = "doctype"
 )
