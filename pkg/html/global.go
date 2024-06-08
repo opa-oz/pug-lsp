@@ -2,7 +2,7 @@ package html
 
 var globalAttributes = []string{
 	"accesskey",
-	// "class", // commented because classes in Pug are done via `.`
+	"class",
 	"contenteditable",
 	"data-",
 	"dir",

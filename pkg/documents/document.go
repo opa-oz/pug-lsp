@@ -33,7 +33,7 @@ func (d *Document) ApplyChanges(ctx context.Context, changes []interface{}) erro
 		}
 	}
 
-	newTree, err := pug.UpdateParsedTreeFromString(ctx, d.Tree, *d.Content)
+	newTree, err := pug.UpdateParsedTreeFromString(ctx, nil, *d.Content)
 	if err != nil {
 		return errors.Wrapf(err, "undable to update content: %s", d.Path)
 	}

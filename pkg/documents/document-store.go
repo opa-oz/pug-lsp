@@ -56,12 +56,11 @@ func (ds *DocumentStore) DocumentDidOpen(ctx context.Context, params protocol.Di
 }
 
 func (ds *DocumentStore) RefreshIncludes(ctx context.Context, doc *Document) {
-	includes, err := query.FindIncludes(doc.Tree)
+	includes, err := query.FindAllIncludes(doc.Tree)
 	if err != nil {
 		ds.logger.Err(err)
 	}
 
-	ds.logger.Println("Main doc", doc.Path)
 	originalContent := *doc.Content
 	for _, strRange := range *includes {
 		original := strings.Trim(originalContent[strRange.StartPos:strRange.EndPos], " ")
@@ -69,7 +68,6 @@ func (ds *DocumentStore) RefreshIncludes(ctx context.Context, doc *Document) {
 
 		newInclude := lsp.NewInclude(&original, &uri)
 		doc.Includes = append(doc.Includes, newInclude)
-		ds.logger.Println("Include found", *newInclude.Original, *newInclude.Path, *newInclude.Prefix)
 	}
 }
 

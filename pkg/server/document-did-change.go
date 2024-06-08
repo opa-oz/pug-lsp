@@ -14,9 +14,11 @@ func (s *Server) TextDocumentDidChange(ctx *glsp.Context, params *protocol.DidCh
 	if !ok {
 		return nil
 	}
-	doc.ApplyChanges(context.Background(), params.ContentChanges)
-	s.logger.Println("Applied changes")
-
+	err := doc.ApplyChanges(context.Background(), params.ContentChanges)
+	if err != nil {
+		s.logger.Err(err)
+		return nil
+	}
 	todo.T("Refresh diagnostics")
 
 	return nil

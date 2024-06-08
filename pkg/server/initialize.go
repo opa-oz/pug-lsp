@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/opa-oz/pug-lsp/pkg/utils"
 	"github.com/tliron/glsp"
 	protocol "github.com/tliron/glsp/protocol_3_16"
 )
@@ -8,12 +9,10 @@ import (
 func (s *Server) initialize(context *glsp.Context, params *protocol.InitializeParams) (any, error) {
 	s.clientCapabilities = params.Capabilities
 
-	ptrTrue := true
-
 	capabilities := s.handler.CreateServerCapabilities()
 	capabilities.CompletionProvider = &protocol.CompletionOptions{
-		TriggerCharacters: []string{"+", "(", ","},
-		ResolveProvider:   &ptrTrue,
+		TriggerCharacters: []string{"+", "(", ",", "&"},
+		ResolveProvider:   utils.PtrBool(true),
 	}
 
 	return protocol.InitializeResult{
