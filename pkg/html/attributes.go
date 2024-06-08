@@ -423,8 +423,7 @@ var tagToAttributes = map[HtmlTag]*[]string{
 }
 
 func GetAttributes(tagName string) *[]string {
-	tagHtmlName := string(tagName)
-	arr, ok := tagToAttributes[HtmlTag(tagHtmlName)]
+	arr, ok := tagToAttributes[HtmlTag(tagName)]
 
 	if !ok {
 		return nil

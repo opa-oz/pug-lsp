@@ -11,7 +11,7 @@ type StrRange struct {
 }
 
 func FindAll(node *sitter.Node, query string) (*[]*StrRange, error) {
-	var includes []*StrRange
+	var nodes []*StrRange
 
 	q, err := sitter.NewQuery([]byte(query), pug.GetLanguage())
 	if err != nil {
@@ -19,7 +19,6 @@ func FindAll(node *sitter.Node, query string) (*[]*StrRange, error) {
 	}
 
 	qs := sitter.NewQueryCursor()
-
 	qs.Exec(q, node)
 
 	for {
@@ -29,9 +28,9 @@ func FindAll(node *sitter.Node, query string) (*[]*StrRange, error) {
 		}
 
 		for _, c := range m.Captures {
-			includes = append(includes, &StrRange{StartPos: c.Node.StartByte(), EndPos: c.Node.EndByte()})
+			nodes = append(nodes, &StrRange{StartPos: c.Node.StartByte(), EndPos: c.Node.EndByte()})
 		}
 	}
 
-	return &includes, nil
+	return &nodes, nil
 }

@@ -7,13 +7,16 @@ import (
 type NodeType string
 
 const (
-	TagNode           NodeType = "tag"
-	TagNameNode       NodeType = "tag_name"
-	AttributeNode     NodeType = "attribute"
-	AttributesNode    NodeType = "attributes"
-	AttributeNameNode NodeType = "attribute_name"
-	ChildrenNode      NodeType = "children"
-	MixinNode         NodeType = "mixin_use"
+	TagNode            NodeType = "tag"
+	TagNameNode        NodeType = "tag_name"
+	AttributeNode      NodeType = "attribute"
+	AttributesNode     NodeType = "attributes"
+	AttributeNameNode  NodeType = "attribute_name"
+	AttributeValueNode NodeType = "attribute_value"
+	ChildrenNode       NodeType = "children"
+	MixinNode          NodeType = "mixin_use"
+	DoctypeNode        NodeType = "doctype"
+	DoctypeNameNode    NodeType = "doctype_name"
 )
 
 func FindUpwards(node *sitter.Node, nodeType NodeType, maxDepth int) *sitter.Node {
@@ -23,11 +26,11 @@ func FindUpwards(node *sitter.Node, nodeType NodeType, maxDepth int) *sitter.Nod
 
 	iterations := 0
 	for {
-		if iterations >= maxDepth {
-			break
-		}
 		if node.Type() == string(nodeType) {
 			return node
+		}
+		if iterations >= maxDepth {
+			break
 		}
 
 		iterations += 1
