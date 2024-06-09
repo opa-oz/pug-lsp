@@ -2,14 +2,15 @@ package documents
 
 import (
 	"context"
+	"os"
 	"strings"
 
+	"github.com/opa-oz/go-todo/todo"
 	"github.com/opa-oz/pug-lsp/pkg/lsp"
 	"github.com/opa-oz/pug-lsp/pkg/pug"
 	"github.com/opa-oz/pug-lsp/pkg/query"
 	"github.com/opa-oz/pug-lsp/pkg/utils"
 	"github.com/pkg/errors"
-	"github.com/tliron/glsp"
 	protocol "github.com/tliron/glsp/protocol_3_16"
 )
 
@@ -27,9 +28,8 @@ func NewDocumentStore(logger utils.Logger, fs utils.FileStore) *DocumentStore {
 	}
 }
 
-func (ds *DocumentStore) DocumentDidOpen(ctx context.Context, params protocol.DidOpenTextDocumentParams, notify glsp.NotifyFunc) (*Document, error) {
-	langID := params.TextDocument.LanguageID // @todo Maybe it's not "pug", need further investigation
-	ds.logger.Println("langID", langID)
+func (ds *DocumentStore) DocumentDidOpen(ctx context.Context, params protocol.DidOpenTextDocumentParams) (*Document, error) {
+	langID := params.TextDocument.LanguageID
 
 	if langID != "pug" {
 		return nil, nil
@@ -44,10 +44,11 @@ func (ds *DocumentStore) DocumentDidOpen(ctx context.Context, params protocol.Di
 	tree, err := pug.GetParsedTreeFromString(ctx, params.TextDocument.Text)
 
 	doc := &Document{
-		URI:     uri,
-		Path:    path,
-		Content: &params.TextDocument.Text,
-		Tree:    tree,
+		URI:      uri,
+		Path:     path,
+		Content:  &params.TextDocument.Text,
+		Tree:     tree,
+		Includes: make(map[string]*lsp.Include),
 	}
 
 	ds.documents[path] = doc
@@ -59,6 +60,7 @@ func (ds *DocumentStore) RefreshIncludes(ctx context.Context, doc *Document) {
 	includes, err := query.FindAllIncludes(doc.Tree)
 	if err != nil {
 		ds.logger.Err(err)
+		return
 	}
 
 	originalContent := *doc.Content
@@ -67,8 +69,38 @@ func (ds *DocumentStore) RefreshIncludes(ctx context.Context, doc *Document) {
 		uri := ds.partialToUri(original, doc)
 
 		newInclude := lsp.NewInclude(&original, &uri)
-		doc.Includes = append(doc.Includes, newInclude)
+		_, ok := doc.Includes[original]
+
+		if !ok {
+			doc.Includes[original] = newInclude
+			ds.LoadIncludedFile(ctx, newInclude)
+		}
+
 	}
+}
+
+func (ds *DocumentStore) LoadIncludedFile(ctx context.Context, include *lsp.Include) {
+	content, err := os.ReadFile(*include.Path)
+
+	if err != nil {
+		ds.logger.Err(err)
+		return
+	}
+
+	uri := *include.Path
+	if !strings.HasPrefix(*include.Path, "file:/") {
+		uri = "file://" + *include.Path
+	}
+	params := protocol.DidOpenTextDocumentParams{
+		TextDocument: protocol.TextDocumentItem{
+			URI:        uri,
+			LanguageID: todo.String("Move to constant", "pug"),
+			Version:    1,
+			Text:       string(content),
+		},
+	}
+
+	ds.DocumentDidOpen(ctx, params)
 }
 
 func (ds *DocumentStore) partialToUri(original string, doc *Document) string {
@@ -77,14 +109,16 @@ func (ds *DocumentStore) partialToUri(original string, doc *Document) string {
 	includeParts := strings.Split(original, "/")
 	includeFilename := includeParts[len(includeParts)-1]
 
-	if !strings.Contains(includeFilename, ".pug") {
+	if !strings.HasSuffix(includeFilename, ".pug") {
 		includeFilename = includeFilename + ".pug"
 	}
 
 	parentFolder = append(parentFolder, includeParts[0:len(includeParts)-1]...)
 	parentFolder = append(parentFolder, includeFilename)
 
-	return strings.Join(parentFolder, "/")
+	joined := strings.Join(parentFolder, "/")
+
+	return joined
 
 }
 

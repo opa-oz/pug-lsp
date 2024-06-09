@@ -9,7 +9,7 @@ import (
 )
 
 func (s *Server) TextDocumentDidOpen(ctx *glsp.Context, params *protocol.DidOpenTextDocumentParams) error {
-	doc, err := s.documentStore.DocumentDidOpen(context.Background(), *params, ctx.Notify)
+	doc, err := s.documentStore.DocumentDidOpen(context.Background(), *params)
 
 	if err != nil {
 		return err

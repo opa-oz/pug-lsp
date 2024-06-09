@@ -16,7 +16,7 @@ type Document struct {
 	Path     string
 	Tree     *sitter.Tree
 	Content  *string
-	Includes []*lsp.Include
+	Includes map[string]*lsp.Include
 }
 
 // ApplyChanges updates the content of the Document from LSP textDocument/didChange events.

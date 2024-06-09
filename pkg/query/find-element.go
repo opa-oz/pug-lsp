@@ -17,6 +17,7 @@ const (
 	MixinNode          NodeType = "mixin_use"
 	DoctypeNode        NodeType = "doctype"
 	DoctypeNameNode    NodeType = "doctype_name"
+	ContentNodeType    NodeType = "content"
 )
 
 func FindUpwards(node *sitter.Node, nodeType NodeType, maxDepth int) *sitter.Node {
