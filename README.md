@@ -36,6 +36,11 @@ _Yes, it's [a real feature](https://pugjs.org/language/attributes.html#attribute
 
 ![attributes-shortcut](docs/attributes-shortcut.png)
 
+### `Doctype` suggestions
+
+PugJS has [a pre-defined list](https://pugjs.org/language/doctype.html) of possible doctypes. 
+
+![doctypes](docs/doctypes.png)
 
 ## Thanks
 

@@ -51,6 +51,7 @@ func (ds *DocumentStore) DocumentDidOpen(ctx context.Context, params protocol.Di
 		Includes: make(map[string]*lsp.Include),
 	}
 
+	doc.HasDoctype = query.FindDoctype(tree)
 	ds.documents[path] = doc
 
 	return doc, nil

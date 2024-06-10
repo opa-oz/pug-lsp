@@ -27,6 +27,10 @@ func FindUpwards(node *sitter.Node, nodeType NodeType, maxDepth int) *sitter.Nod
 
 	iterations := 0
 	for {
+		if node == nil {
+			break
+		}
+
 		if node.Type() == string(nodeType) {
 			return node
 		}

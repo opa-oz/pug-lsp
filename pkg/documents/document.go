@@ -6,17 +6,19 @@ import (
 	"github.com/opa-oz/go-todo/todo"
 	"github.com/opa-oz/pug-lsp/pkg/lsp"
 	"github.com/opa-oz/pug-lsp/pkg/pug"
+	"github.com/opa-oz/pug-lsp/pkg/query"
 	"github.com/pkg/errors"
 	sitter "github.com/smacker/go-tree-sitter"
 	protocol "github.com/tliron/glsp/protocol_3_16"
 )
 
 type Document struct {
-	URI      protocol.DocumentUri
-	Path     string
-	Tree     *sitter.Tree
-	Content  *string
-	Includes map[string]*lsp.Include
+	URI        protocol.DocumentUri
+	Path       string
+	Tree       *sitter.Tree
+	Content    *string
+	Includes   map[string]*lsp.Include
+	HasDoctype bool
 }
 
 // ApplyChanges updates the content of the Document from LSP textDocument/didChange events.
@@ -40,6 +42,7 @@ func (d *Document) ApplyChanges(ctx context.Context, changes []interface{}) erro
 
 	todo.T("Applied changes")
 	d.Tree = newTree
+	d.HasDoctype = query.FindDoctype(newTree)
 
 	return nil
 }

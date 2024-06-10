@@ -35,6 +35,7 @@ func (s *Server) TextDocumentCompletion(ctx *glsp.Context, params *protocol.Comp
 			completionItems = *completion.AndCompletion(doc, completionItems, params)
 		}
 	} else {
+		completionItems = *completion.DoctypeCompletion(doc, completionItems)
 		completionItems = *completion.PlainCompletion(doc, completionItems, params, &s.logger)
 	}
 
