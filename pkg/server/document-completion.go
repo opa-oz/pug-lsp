@@ -15,28 +15,36 @@ func (s *Server) TextDocumentCompletion(ctx *glsp.Context, params *protocol.Comp
 	if !ok {
 		return nil, nil
 	}
+	node := doc.GetAtPosition(&params.Position)
+	existingAttrs := query.GetExistingAttributes(node, *doc.Content)
+	meta := completion.CompletionMetaParams{
+		Doc:           doc,
+		Params:        params,
+		CurrentNode:   node,
+		ExistingAttrs: existingAttrs,
+		Logger:        &s.logger,
+	}
+
+	if node != nil && query.HasJSAncestor(node) {
+		return nil, nil
+	}
 
 	if params.Context != nil && params.Context.TriggerKind == protocol.CompletionTriggerKindTriggerCharacter {
 		switch *params.Context.TriggerCharacter {
 		case "(":
-			completionItems = *completion.LocalCompletion(doc, completionItems, params, nil)
-			completionItems = *completion.GlobalCompletion(completionItems, nil)
+			completionItems = *completion.LocalCompletion(&meta, completionItems)
+			completionItems = *completion.GlobalCompletion(&meta, completionItems)
 		case ",":
-			existingAttrs := query.GetExistingAttributes(doc.GetAtPosition(&params.Position), *doc.Content)
-			completionItems = *completion.LocalCompletion(doc, completionItems, params, existingAttrs)
-			completionItems = *completion.GlobalCompletion(completionItems, existingAttrs)
-		case " ":
-			existingAttrs := query.GetExistingAttributes(doc.GetAtPosition(&params.Position), *doc.Content)
-			completionItems = *completion.LocalCompletion(doc, completionItems, params, existingAttrs)
-			completionItems = *completion.GlobalCompletion(completionItems, existingAttrs)
+			completionItems = *completion.LocalCompletion(&meta, completionItems)
+			completionItems = *completion.GlobalCompletion(&meta, completionItems)
 		case "+":
-			completionItems = *completion.MixinsCompletion(completionItems)
+			completionItems = *completion.MixinsCompletion(&meta, completionItems)
 		case "&":
-			completionItems = *completion.AndCompletion(doc, completionItems, params)
+			completionItems = *completion.AndCompletion(&meta, completionItems)
 		}
 	} else {
-		completionItems = *completion.DoctypeCompletion(doc, completionItems)
-		completionItems = *completion.PlainCompletion(doc, completionItems, params, &s.logger)
+		completionItems = *completion.DoctypeCompletion(&meta, completionItems)
+		completionItems = *completion.PlainCompletion(&meta, completionItems)
 	}
 
 	if completionItems == nil {

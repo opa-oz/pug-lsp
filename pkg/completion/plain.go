@@ -1,10 +1,8 @@
 package completion
 
 import (
-	"github.com/opa-oz/pug-lsp/pkg/documents"
 	"github.com/opa-oz/pug-lsp/pkg/html"
 	"github.com/opa-oz/pug-lsp/pkg/query"
-	"github.com/opa-oz/pug-lsp/pkg/utils"
 	protocol "github.com/tliron/glsp/protocol_3_16"
 )
 
@@ -25,24 +23,23 @@ func globalTags(completionItems []protocol.CompletionItem) *[]protocol.Completio
 	return &completionItems
 }
 
-func PlainCompletion(doc *documents.Document, completionItems []protocol.CompletionItem, params *protocol.CompletionParams, logger *utils.Logger) *[]protocol.CompletionItem {
-	node := doc.GetAtPosition(&params.Position)
+func PlainCompletion(meta *CompletionMetaParams, completionItems []protocol.CompletionItem) *[]protocol.CompletionItem {
+	node := meta.CurrentNode
 	if node == nil {
 		return globalTags(completionItems)
+	}
+
+	hasAttrsAncestor := query.HasAttributesAncestor(node)
+	if hasAttrsAncestor {
+		items := LocalCompletion(meta, completionItems)
+		items = GlobalCompletion(meta, *items)
+
+		return items
 	}
 
 	tag := query.FindUpwards(node, query.TagNode, 1)
 	if tag != nil {
 		return globalTags(completionItems)
-	}
-
-	attributesEl := query.FindUpwards(node, query.AttributesNode, 1)
-	if attributesEl != nil {
-		existingAttrs := query.GetExistingAttributes(node, *doc.Content)
-		items := LocalCompletion(doc, completionItems, params, existingAttrs)
-		items = GlobalCompletion(*items, existingAttrs)
-
-		return items
 	}
 
 	return &completionItems

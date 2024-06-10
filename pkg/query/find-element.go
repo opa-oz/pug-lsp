@@ -18,6 +18,7 @@ const (
 	DoctypeNode        NodeType = "doctype"
 	DoctypeNameNode    NodeType = "doctype_name"
 	ContentNodeType    NodeType = "content"
+	ContentNodeJS      NodeType = "javascript"
 )
 
 func FindUpwards(node *sitter.Node, nodeType NodeType, maxDepth int) *sitter.Node {
@@ -34,7 +35,7 @@ func FindUpwards(node *sitter.Node, nodeType NodeType, maxDepth int) *sitter.Nod
 		if node.Type() == string(nodeType) {
 			return node
 		}
-		if iterations >= maxDepth {
+		if maxDepth != -1 && iterations >= maxDepth {
 			break
 		}
 

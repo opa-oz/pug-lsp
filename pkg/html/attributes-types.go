@@ -3,18 +3,19 @@ package html
 import "fmt"
 
 var customDetails = map[string]string{
-	"style":    "style={ }",
-	"checked":  "checked",
-	"disabled": "disabled",
-	"hidden":   "hidden",
-	"class":    "class=[ ]",
-	"click":    "'(click)'",
+	"style":     "style={}",
+	"checked":   "checked",
+	"disabled":  "disabled",
+	"hidden":    "hidden",
+	"class":     "class=[]",
+	"click":     "'(click)'",
+	"draggable": "draggable",
 }
 
 func GetInsertText(attribute string) *string {
 	details, ok := customDetails[attribute]
 	if !ok {
-		details = fmt.Sprintf("%s=\" \"", attribute)
+		details = fmt.Sprintf("%s=\"\"", attribute)
 		return &details
 	}
 

@@ -5,21 +5,20 @@ import (
 	"strings"
 
 	"github.com/opa-oz/go-todo/todo"
-	"github.com/opa-oz/pug-lsp/pkg/documents"
 	"github.com/opa-oz/pug-lsp/pkg/html"
 	"github.com/opa-oz/pug-lsp/pkg/query"
 	"github.com/opa-oz/pug-lsp/pkg/utils"
 	protocol "github.com/tliron/glsp/protocol_3_16"
 )
 
-func GlobalCompletion(completionItems []protocol.CompletionItem, existingAttrs *map[string]bool) *[]protocol.CompletionItem {
+func GlobalCompletion(meta *CompletionMetaParams, completionItems []protocol.CompletionItem) *[]protocol.CompletionItem {
 	valueKind := protocol.CompletionItemKindProperty
 	globalAttrs := html.GlobalAttrs()
 
 	for _, attr := range *globalAttrs {
-		if existingAttrs != nil {
+		if meta.ExistingAttrs != nil {
 			// If attribute is already used - skip
-			_, ok := (*existingAttrs)[attr]
+			_, ok := (*meta.ExistingAttrs)[attr]
 			if ok {
 				continue
 			}
@@ -36,11 +35,11 @@ func GlobalCompletion(completionItems []protocol.CompletionItem, existingAttrs *
 	return &completionItems
 }
 
-func LocalCompletion(doc *documents.Document, completionItems []protocol.CompletionItem, params *protocol.CompletionParams, existingAttrs *map[string]bool) *[]protocol.CompletionItem {
+func LocalCompletion(meta *CompletionMetaParams, completionItems []protocol.CompletionItem) *[]protocol.CompletionItem {
 	valueKind := protocol.CompletionItemKindProperty
 	eventKind := protocol.CompletionItemKindEvent
 
-	node := doc.GetAtPosition(&params.Position)
+	node := meta.CurrentNode
 	if node == nil {
 		return &completionItems
 	}
@@ -61,7 +60,7 @@ func LocalCompletion(doc *documents.Document, completionItems []protocol.Complet
 		return &completionItems
 	}
 
-	originalContent := *doc.Content
+	originalContent := *meta.Doc.Content
 	tagNameStr := originalContent[tagName.StartByte():tagName.EndByte()]
 
 	specificAttributes := html.GetAttributes(tagNameStr)
@@ -73,9 +72,9 @@ func LocalCompletion(doc *documents.Document, completionItems []protocol.Complet
 				kind = eventKind
 			}
 
-			if existingAttrs != nil {
+			if meta.ExistingAttrs != nil {
 				// If attribute is already used - skip
-				_, ok := (*existingAttrs)[attr]
+				_, ok := (*meta.ExistingAttrs)[attr]
 				if ok {
 					continue
 				}
@@ -93,14 +92,15 @@ func LocalCompletion(doc *documents.Document, completionItems []protocol.Complet
 	return &completionItems
 }
 
-func AndCompletion(doc *documents.Document, completionItems []protocol.CompletionItem, params *protocol.CompletionParams) *[]protocol.CompletionItem {
+func AndCompletion(meta *CompletionMetaParams, completionItems []protocol.CompletionItem) *[]protocol.CompletionItem {
 	snippetKind := protocol.CompletionItemKindSnippet
 
-	node := doc.GetAtPosition(&params.Position)
-
+	// node := meta.doc.GetAtPosition(&meta.params.Position)
+	node := meta.CurrentNode
 	if node == nil {
 		return &completionItems
 	}
+
 	tag := query.FindUpwards(node, query.TagNode, 2)
 	if tag == nil {
 		return &completionItems

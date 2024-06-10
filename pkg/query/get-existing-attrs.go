@@ -7,8 +7,13 @@ import (
 	sitter "github.com/smacker/go-tree-sitter"
 )
 
-func GetExistingAttributes(node *sitter.Node, originalContent string) *map[string]bool {
+type ExistingAttributes = map[string]bool
+
+func GetExistingAttributes(node *sitter.Node, originalContent string) *ExistingAttributes {
 	var attributes map[string]bool
+	if node == nil {
+		return nil
+	}
 
 	attributesNode := FindUpwards(node, AttributesNode, 1)
 

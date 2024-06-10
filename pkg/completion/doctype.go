@@ -1,17 +1,21 @@
 package completion
 
 import (
-	"github.com/opa-oz/pug-lsp/pkg/documents"
 	"github.com/opa-oz/pug-lsp/pkg/html"
+	"github.com/opa-oz/pug-lsp/pkg/query"
 	protocol "github.com/tliron/glsp/protocol_3_16"
 )
 
-func DoctypeCompletion(doc *documents.Document, completionItems []protocol.CompletionItem) *[]protocol.CompletionItem {
-	if doc.HasDoctype {
+func DoctypeCompletion(meta *CompletionMetaParams, completionItems []protocol.CompletionItem) *[]protocol.CompletionItem {
+	if meta.Doc.HasDoctype {
 		return &completionItems
 	}
 
 	valueKind := protocol.CompletionItemKindSnippet
+
+	if meta.CurrentNode != nil && query.HasAttributesAncestor(meta.CurrentNode) {
+		return &completionItems
+	}
 
 	for i, doctype := range html.Doctypes {
 		preselect := i == 0

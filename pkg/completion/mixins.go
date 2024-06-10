@@ -5,7 +5,7 @@ import (
 	protocol "github.com/tliron/glsp/protocol_3_16"
 )
 
-func MixinsCompletion(completionItems []protocol.CompletionItem) *[]protocol.CompletionItem {
+func MixinsCompletion(_ *CompletionMetaParams, completionItems []protocol.CompletionItem) *[]protocol.CompletionItem {
 	valueKind := protocol.CompletionItemKindValue
 
 	todo.T("Grab mixins from lined files and offer")

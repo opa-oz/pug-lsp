@@ -26,11 +26,11 @@ func TestGetInsertText(t *testing.T) {
 		input    string
 		expected string
 	}{
-		{"style", "style={ }"},
+		{"style", "style={}"},
 		{"checked", "checked"},
 		{"disabled", "disabled"},
 		{"hidden", "hidden"},
-		{"class", "class=[ ]"},
+		{"class", "class=[]"},
 		{"click", "'(click)'"},
 	}
 
