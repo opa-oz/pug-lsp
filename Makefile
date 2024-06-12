@@ -7,3 +7,8 @@ test: ## Run unit tests
 	@go test ./pkg/utils ./pkg/query ./pkg/html ./pkg/documents
 
 .PHONY: test
+
+build: ## Build GO binary
+	@go build -o pug-lsp -ldflags="-s -w"
+
+.PHONY: build

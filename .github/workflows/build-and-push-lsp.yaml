@@ -1,6 +1,7 @@
 name: "Build and push new LSP"
 
 on:
+  workflow_dispatch:
   release:
     types: [ created ]
 
@@ -31,6 +32,6 @@ jobs:
           goarch: ${{ matrix.goarch }}
           binary_name: "pug-lsp"
           ldflags: "-s -w"
-          extra_files: LICENSE
+          build_command: "make build"
 
 
