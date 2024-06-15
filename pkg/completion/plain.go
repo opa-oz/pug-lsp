@@ -1,12 +1,39 @@
 package completion
 
 import (
+	"github.com/opa-oz/go-todo/todo"
 	"github.com/opa-oz/pug-lsp/pkg/html"
 	"github.com/opa-oz/pug-lsp/pkg/lsp"
 	"github.com/opa-oz/pug-lsp/pkg/query"
 	protocol "github.com/tliron/glsp/protocol_3_16"
 )
 
+func keywordsCase(completionItems []protocol.CompletionItem) *[]protocol.CompletionItem {
+	keywordKind := protocol.CompletionItemKindKeyword
+	snippetKind := protocol.CompletionItemKindSnippet
+	keytags := lsp.GetCaseKeywords()
+
+	for _, key := range *keytags {
+		keyName := string(key)
+		completionItems = append(completionItems, protocol.CompletionItem{
+			Label:      keyName,
+			Kind:       &keywordKind,
+			Detail:     &keyName,
+			InsertText: &keyName,
+		})
+	}
+
+	breakKey := todo.String("Move break to snippets", "break")
+	insertion := "- break"
+	completionItems = append(completionItems, protocol.CompletionItem{
+		Label:      breakKey,
+		Kind:       &snippetKind,
+		Detail:     &insertion,
+		InsertText: &insertion,
+	})
+
+	return &completionItems
+}
 func keywords(completionItems []protocol.CompletionItem) *[]protocol.CompletionItem {
 	keywordKind := protocol.CompletionItemKindKeyword
 	keytags := lsp.GetKeywords()
@@ -56,6 +83,10 @@ func PlainCompletion(meta *CompletionMetaParams, completionItems []protocol.Comp
 		items = GlobalCompletion(meta, *items)
 
 		return items
+	}
+	prevSibling := node.PrevSibling()
+	if query.HasCaseAncestor(node) || (prevSibling != nil && prevSibling.Type() == string(query.CaseNode)) {
+		return keywordsCase(completionItems)
 	}
 
 	tag := query.FindUpwards(node, query.TagNode, 1)

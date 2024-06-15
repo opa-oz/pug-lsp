@@ -5,5 +5,5 @@ import (
 )
 
 func HasJSAncestor(node *sitter.Node) bool {
-	return FindUpwards(node, JSNode, maxDepth) != nil || FindUpwards(node, BufferedCodeNode, maxDepth) != nil || FindUpwards(node, UnBufferedCodeNode, maxDepth) != nil
+	return FindUpwards(node, JSNode, MaxDepth) != nil || FindUpwards(node, BufferedCodeNode, MaxDepth) != nil || FindUpwards(node, UnBufferedCodeNode, MaxDepth) != nil
 }

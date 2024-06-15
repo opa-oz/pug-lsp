@@ -19,6 +19,7 @@ const (
 	JSNode             NodeType = "javascript"
 	BufferedCodeNode   NodeType = "buffered_code"
 	UnBufferedCodeNode NodeType = "unbuffered_code"
+	CaseNode           NodeType = "case"
 )
 
-var maxDepth = todo.Int("Is 5 enough?", 5)
+var MaxDepth = todo.Int("Is 5 enough?", 5)

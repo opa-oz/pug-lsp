@@ -80,7 +80,7 @@ func TestPositions(t *testing.T) {
 
 	node := doc.GetAtPosition(&position)
 	assert.NotNil(t, node)
-	assert.Equal(t, node.Type(), string(query.ContentNodeType)) // we found "My awesome text"
+	assert.Equal(t, node.Type(), string(query.ContentNode)) // we found "My awesome text"
 
 	node = doc.GetBeforeTrigger(&position)
 	assert.NotNil(t, node)
