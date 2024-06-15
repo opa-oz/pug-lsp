@@ -5,10 +5,6 @@ import (
 )
 
 func FindUpwards(node *sitter.Node, nodeType NodeType, maxDepth int) *sitter.Node {
-	if node == nil {
-		return nil
-	}
-
 	iterations := 0
 	for {
 		if node == nil {

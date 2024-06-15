@@ -13,7 +13,7 @@ func globalTags(completionItems []protocol.CompletionItem) *[]protocol.Completio
 	for _, tag := range *htmlTags {
 		tagCopy := tag
 		completionItems = append(completionItems, protocol.CompletionItem{
-			Label:      tagCopy + " - [HTML]",
+			Label:      tagCopy,
 			Kind:       &valueKind,
 			Detail:     &tagCopy,
 			InsertText: &tagCopy,

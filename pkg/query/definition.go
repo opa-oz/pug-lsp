@@ -1,5 +1,7 @@
 package query
 
+import "github.com/opa-oz/go-todo/todo"
+
 type NodeType string
 
 const (
@@ -15,4 +17,8 @@ const (
 	DoctypeNameNode    NodeType = "doctype_name"
 	ContentNode        NodeType = "content"
 	JSNode             NodeType = "javascript"
+	BufferedCodeNode   NodeType = "buffered_code"
+	UnBufferedCodeNode NodeType = "unbuffered_code"
 )
+
+var maxDepth = todo.Int("Is 5 enough?", 5)

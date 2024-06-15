@@ -25,6 +25,9 @@ func (s *Server) TextDocumentCompletion(ctx *glsp.Context, params *protocol.Comp
 		Logger:        &s.logger,
 	}
 
+	// if node != nil {
+	// 	s.logger.Println("Completion triggered", node.Type(), node.Parent().Type())
+	// }
 	if node != nil && (query.HasJSAncestor(node) || query.HasContentAncestor(node)) {
 		return nil, nil
 	}

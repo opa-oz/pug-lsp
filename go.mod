@@ -3,7 +3,7 @@ module github.com/opa-oz/pug-lsp
 go 1.22.2
 
 require (
-	github.com/opa-oz/go-todo v0.0.3
+	github.com/opa-oz/go-todo v0.0.4
 	github.com/pkg/errors v0.9.1
 	github.com/smacker/go-tree-sitter v0.0.0-20240514083259-c5d1f3f5f99e
 	github.com/stretchr/testify v1.9.0
