@@ -2,9 +2,27 @@ package completion
 
 import (
 	"github.com/opa-oz/pug-lsp/pkg/html"
+	"github.com/opa-oz/pug-lsp/pkg/lsp"
 	"github.com/opa-oz/pug-lsp/pkg/query"
 	protocol "github.com/tliron/glsp/protocol_3_16"
 )
+
+func keywords(completionItems []protocol.CompletionItem) *[]protocol.CompletionItem {
+	keywordKind := protocol.CompletionItemKindKeyword
+	keytags := lsp.GetKeywords()
+
+	for _, key := range *keytags {
+		keyName := string(key)
+		completionItems = append(completionItems, protocol.CompletionItem{
+			Label:      keyName,
+			Kind:       &keywordKind,
+			Detail:     &keyName,
+			InsertText: &keyName,
+		})
+	}
+
+	return &completionItems
+}
 
 func globalTags(completionItems []protocol.CompletionItem) *[]protocol.CompletionItem {
 	valueKind := protocol.CompletionItemKindConstant
@@ -26,7 +44,10 @@ func globalTags(completionItems []protocol.CompletionItem) *[]protocol.Completio
 func PlainCompletion(meta *CompletionMetaParams, completionItems []protocol.CompletionItem) *[]protocol.CompletionItem {
 	node := meta.CurrentNode
 	if node == nil {
-		return globalTags(completionItems)
+		items := globalTags(completionItems)
+		items = keywords(*items)
+
+		return items
 	}
 
 	hasAttrsAncestor := query.HasAttributesAncestor(node)
@@ -39,7 +60,10 @@ func PlainCompletion(meta *CompletionMetaParams, completionItems []protocol.Comp
 
 	tag := query.FindUpwards(node, query.TagNode, 1)
 	if tag != nil {
-		return globalTags(completionItems)
+		items := globalTags(completionItems)
+		items = keywords(*items)
+
+		return items
 	}
 
 	return &completionItems
