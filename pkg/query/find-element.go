@@ -4,23 +4,6 @@ import (
 	sitter "github.com/smacker/go-tree-sitter"
 )
 
-type NodeType string
-
-const (
-	TagNode            NodeType = "tag"
-	TagNameNode        NodeType = "tag_name"
-	AttributeNode      NodeType = "attribute"
-	AttributesNode     NodeType = "attributes"
-	AttributeNameNode  NodeType = "attribute_name"
-	AttributeValueNode NodeType = "attribute_value"
-	ChildrenNode       NodeType = "children"
-	MixinNode          NodeType = "mixin_use"
-	DoctypeNode        NodeType = "doctype"
-	DoctypeNameNode    NodeType = "doctype_name"
-	ContentNodeType    NodeType = "content"
-	ContentNodeJS      NodeType = "javascript"
-)
-
 func FindUpwards(node *sitter.Node, nodeType NodeType, maxDepth int) *sitter.Node {
 	if node == nil {
 		return nil
