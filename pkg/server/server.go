@@ -32,8 +32,6 @@ func NewServer(opts ServerOpts) *Server {
 	logger := utils.NewFileLogger(opts.LogFile, fmt.Sprintf("[%s]\t", opts.Name), 10)
 	fs, _ := utils.NewFileStore("", logger)
 
-	logger.Println("Hellow cruel workd")
-
 	handler := protocol.Handler{}
 	glspServer := glsps.NewServer(&handler, opts.Name, opts.Debug)
 

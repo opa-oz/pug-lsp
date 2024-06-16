@@ -76,6 +76,9 @@ func (ds *DocumentStore) RefreshIncludes(ctx context.Context, doc *Document) {
 	for _, strRange := range *includes {
 		original := strings.Trim(originalContent[strRange.StartPos:strRange.EndPos], " ")
 		uri := ds.partialToUri(original, doc)
+		if uri == "" {
+			continue
+		}
 
 		newInclude := lsp.NewInclude(&original, &uri)
 		_, ok := doc.Includes[original]
@@ -114,7 +117,14 @@ func (ds *DocumentStore) partialToUri(original string, doc *Document) string {
 	includeParts := strings.Split(original, "/")
 	includeFilename := includeParts[len(includeParts)-1]
 
+	if strings.HasPrefix(includeFilename, "./") {
+		includeFilename = includeFilename[2:]
+	}
+
 	if !strings.HasSuffix(includeFilename, ".pug") {
+		if strings.Contains(includeFilename, ".") {
+			return ""
+		}
 		includeFilename = includeFilename + ".pug"
 	}
 

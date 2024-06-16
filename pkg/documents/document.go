@@ -3,7 +3,6 @@ package documents
 import (
 	"context"
 
-	"github.com/opa-oz/go-todo/todo"
 	"github.com/opa-oz/pug-lsp/pkg/lsp"
 	"github.com/opa-oz/pug-lsp/pkg/pug"
 	"github.com/opa-oz/pug-lsp/pkg/query"
@@ -23,6 +22,15 @@ type Document struct {
 }
 
 // ApplyChanges updates the content of the Document from LSP textDocument/didChange events.
+//  1. Apply changes
+//     1.1 If `TextDocumentContentChangeEvent`
+//     Patch original content in place
+//     1.2 Else if `TextDocumentContentChangeEvenWhole`
+//     Update content completely
+//  2. Regenerate sitter.Tree
+//     Note: If pass `oldTree` to `UpdateParsedTreeFromString` - it works incorrectly, doing only partial update
+//  3. Check if `doctype` present in file
+//  4. Find and save mixins definitions
 func (d *Document) ApplyChanges(ctx context.Context, changes []interface{}) error {
 	for _, change := range changes {
 		switch c := change.(type) {
@@ -41,7 +49,6 @@ func (d *Document) ApplyChanges(ctx context.Context, changes []interface{}) erro
 		return errors.Wrapf(err, "undable to update content: %s", d.Path)
 	}
 
-	todo.T("Applied changes")
 	d.Tree = newTree
 	d.HasDoctype = query.FindDoctype(newTree)
 	d.RefreshMixins(ctx)

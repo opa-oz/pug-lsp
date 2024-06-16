@@ -6,6 +6,23 @@ import (
 	protocol "github.com/tliron/glsp/protocol_3_16"
 )
 
+// docMixins generates completion items for mixins defined in a document.
+//
+// It iterates through the mixins defined in the provided document (`doc`) and creates
+// completion items based on each mixin's name and optional arguments. If a mixin's name
+// matches the `exclude` string, it skips creating a completion item for that mixin.
+//
+// Parameters:
+//
+//	doc *documents.Document - The document containing mixin definitions.
+//	completionItems []protocol.CompletionItem - Existing list of completion items to append to.
+//	exclude string - The name of a mixin to exclude from completion items.
+//
+// Returns:
+//
+//	*[]protocol.CompletionItem - A pointer to a slice of protocol.CompletionItem containing
+//	                             completion items for mixins. Returns nil if the document
+//	                             or completion items slice is nil.
 func docMixins(doc *documents.Document, completionItems []protocol.CompletionItem, exclude string) *[]protocol.CompletionItem {
 	functionKind := protocol.CompletionItemKindFunction
 
