@@ -12,3 +12,8 @@ build: ## Build GO binary
 	@go build -o pug-lsp -ldflags="-s -w"
 
 .PHONY: build
+
+toc: ## Format README.md to add TOC
+	markdown-toc -i README.md
+
+.PHONY: toc

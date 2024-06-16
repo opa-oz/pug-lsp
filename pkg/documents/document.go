@@ -18,6 +18,7 @@ type Document struct {
 	Tree       *sitter.Tree
 	Content    *string
 	Includes   map[string]*lsp.Include
+	Mixins     map[string]*lsp.Mixin
 	HasDoctype bool
 }
 
@@ -43,10 +44,27 @@ func (d *Document) ApplyChanges(ctx context.Context, changes []interface{}) erro
 	todo.T("Applied changes")
 	d.Tree = newTree
 	d.HasDoctype = query.FindDoctype(newTree)
+	d.RefreshMixins(ctx)
 
 	return nil
 }
 
+func (d *Document) RefreshMixins(ctx context.Context) {
+	d.Mixins = make(map[string]*lsp.Mixin)
+	mixinDefinitions := query.FindMixinDefinitions(d.Tree.RootNode())
+
+	if mixinDefinitions == nil {
+		return
+	}
+
+	for _, def := range *mixinDefinitions {
+		mixin := lsp.NewMixin(d.URI, def, d.Content)
+
+		if mixin != nil {
+			d.Mixins[mixin.Name] = mixin
+		}
+	}
+}
 func (d *Document) GetAtPosition(position *protocol.Position) *sitter.Node {
 	node := d.Tree.RootNode().NamedDescendantForPointRange(
 		sitter.Point{

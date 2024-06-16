@@ -9,6 +9,7 @@ import (
 )
 
 type CompletionMetaParams struct {
+	DocumentStore *documents.DocumentStore
 	Doc           *documents.Document
 	Params        *protocol.CompletionParams
 	ExistingAttrs *query.ExistingAttributes

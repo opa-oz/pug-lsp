@@ -2,6 +2,25 @@
 
 An implementation of the Language Protocol Server for [Pug.js](https://pugjs.org)
 
+<!-- toc -->
+
+- [Features](#features)
+  * [Note](#note)
+  * [Tags suggestions](#tags-suggestions)
+  * [Attributes suggestions](#attributes-suggestions)
+    + [Auto suggest common attributes (such as `style`, `class`, `title`) for tags](#auto-suggest-common-attributes-such-as-style-class-title-for-tags)
+    + [Auto suggest events (such as `onclick`, `onenter`) for tags](#auto-suggest-events-such-as-onclick-onenter-for-tags)
+    + [Auto suggest tag-specific attributes (such as `href` for `a`)](#auto-suggest-tag-specific-attributes-such-as-href-for-a)
+    + [`&attributes` snippet](#attributes-snippet)
+  * [Mixins suggestions](#mixins-suggestions)
+  * [`Doctype` suggestions](#doctype-suggestions)
+  * [Keywords suggestions](#keywords-suggestions)
+    + [`case .. when .. default`](#case--when--default)
+    + [`if .. else`](#if--else)
+- [Thanks](#thanks)
+
+<!-- tocstop -->
+
 ## Features
 
 `pug-lsp` aims to provide suggestions for you to edit `.pug` in your editor.
@@ -36,6 +55,13 @@ _Yes, it's [a real feature](https://pugjs.org/language/attributes.html#attribute
 
 ![attributes-shortcut](docs/attributes-shortcut.png)
 
+### Mixins suggestions
+
+Look through included files and suggest defined mixins!
+
+![mixins](docs/mixins-suggestions.png)
+
+
 ### `Doctype` suggestions
 
 PugJS has [a pre-defined list](https://pugjs.org/language/doctype.html) of possible doctypes. 
@@ -57,8 +83,9 @@ _Note_ [Case Fall Through](https://pugjs.org/language/case.html#case-fall-throug
 > The difference, however, is a fall through in JavaScript happens whenever a break statement is not explicitly included; 
 > in Pug, it only happens when a block is completely missing.
 
-If you would like to not output anything in a specific case, add an explicit unbuffered break
+If you would like to not output anything in a specific case, add an explicit unbuffered break snippet: `- break`
 ![break-suggestion](docs/break-snippet.png)
+
 
 #### `if .. else`
 

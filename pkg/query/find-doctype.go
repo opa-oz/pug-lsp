@@ -1,15 +1,11 @@
 package query
 
 import (
-	"fmt"
-
 	sitter "github.com/smacker/go-tree-sitter"
 )
 
 func FindDoctype(tree *sitter.Tree) bool {
-	q := fmt.Sprintf("(%s) @doc", DoctypeNode)
-
-	results, err := FindAll(tree.RootNode(), q)
+	results, err := FindAll(tree.RootNode(), DoctypeQ)
 	if err != nil {
 		return false
 	}

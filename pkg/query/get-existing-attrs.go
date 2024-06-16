@@ -3,7 +3,6 @@ package query
 import (
 	"strings"
 
-	"github.com/opa-oz/go-todo/todo"
 	sitter "github.com/smacker/go-tree-sitter"
 )
 
@@ -21,9 +20,8 @@ func GetExistingAttributes(node *sitter.Node, originalContent string) *ExistingA
 		return nil
 	}
 
-	attributesRanges, err := FindAll(attributesNode, "(attribute_name) @attr")
+	attributesRanges, err := FindAll(attributesNode, AttributeNamesQ)
 	if err != nil {
-		todo.String("Put error here")
 		return nil
 	}
 	attributes = make(map[string]bool)

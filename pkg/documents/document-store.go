@@ -42,16 +42,24 @@ func (ds *DocumentStore) DocumentDidOpen(ctx context.Context, params protocol.Di
 	}
 
 	tree, err := pug.GetParsedTreeFromString(ctx, params.TextDocument.Text)
-
-	doc := &Document{
-		URI:      uri,
-		Path:     path,
-		Content:  &params.TextDocument.Text,
-		Tree:     tree,
-		Includes: make(map[string]*lsp.Include),
+	doc, ok := ds.Get(uri)
+	if ok {
+		doc.Tree = tree
+		doc.Content = &params.TextDocument.Text
+		ds.logger.Println("DidOpen already open document", uri)
+	} else {
+		doc = &Document{
+			URI:      uri,
+			Path:     path,
+			Content:  &params.TextDocument.Text,
+			Tree:     tree,
+			Includes: make(map[string]*lsp.Include),
+			Mixins:   make(map[string]*lsp.Mixin),
+		}
 	}
 
 	doc.HasDoctype = query.FindDoctype(tree)
+	doc.RefreshMixins(ctx)
 	ds.documents[path] = doc
 
 	return doc, nil
@@ -88,13 +96,9 @@ func (ds *DocumentStore) LoadIncludedFile(ctx context.Context, include *lsp.Incl
 		return
 	}
 
-	uri := *include.Path
-	if !strings.HasPrefix(*include.Path, "file:/") {
-		uri = "file://" + *include.Path
-	}
 	params := protocol.DidOpenTextDocumentParams{
 		TextDocument: protocol.TextDocumentItem{
-			URI:        uri,
+			URI:        *include.URI,
 			LanguageID: todo.String("Move to constant", "pug"),
 			Version:    1,
 			Text:       string(content),

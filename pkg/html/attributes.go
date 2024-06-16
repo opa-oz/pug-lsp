@@ -420,6 +420,7 @@ var tagToAttributes = map[HtmlTag]*[]string{
 	Title:   &allVisible,
 	Tr:      &allVisible,
 	Html:    &allVisible,
+	Ul:      &allVisible,
 }
 
 func GetAttributes(tagName string) *[]string {

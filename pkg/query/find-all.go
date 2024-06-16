@@ -10,8 +10,24 @@ type StrRange struct {
 	EndPos   uint32
 }
 
-func FindAll(node *sitter.Node, query string) (*[]*StrRange, error) {
+func FindAll(node *sitter.Node, query Query) (*[]*StrRange, error) {
 	var nodes []*StrRange
+
+	ns, err := FindAllNodes(node, query)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for _, n := range *ns {
+		nodes = append(nodes, &StrRange{StartPos: n.StartByte(), EndPos: n.EndByte()})
+	}
+
+	return &nodes, nil
+}
+
+func FindAllNodes(node *sitter.Node, query Query) (*[]*sitter.Node, error) {
+	var nodes []*sitter.Node
 
 	q, err := sitter.NewQuery([]byte(query), pug.GetLanguage())
 	if err != nil {
@@ -28,7 +44,7 @@ func FindAll(node *sitter.Node, query string) (*[]*StrRange, error) {
 		}
 
 		for _, c := range m.Captures {
-			nodes = append(nodes, &StrRange{StartPos: c.Node.StartByte(), EndPos: c.Node.EndByte()})
+			nodes = append(nodes, c.Node)
 		}
 	}
 
