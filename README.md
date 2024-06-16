@@ -42,6 +42,29 @@ PugJS has [a pre-defined list](https://pugjs.org/language/doctype.html) of possi
 
 ![doctypes](docs/doctypes.png)
 
+### Keywords suggestions
+
+#### `case .. when .. default`
+
+Pug-LSP simply follows [Pug's implementation](https://pugjs.org/language/case.html)
+
+![case-suggestions](/docs/case-suggestions.png)
+
+_Note_ [Case Fall Through](https://pugjs.org/language/case.html#case-fall-through)
+
+> You can use fall through, just as you would in a JavaScript switch statement.
+>
+> The difference, however, is a fall through in JavaScript happens whenever a break statement is not explicitly included; 
+> in Pug, it only happens when a block is completely missing.
+
+If you would like to not output anything in a specific case, add an explicit unbuffered break
+![break-suggestion](docs/break-snippet.png)
+
+#### `if .. else`
+
+![if-suggestion](docs/if-suggestions.png)
+
+
 ## Thanks
 
  - [zealot128/tree-sitter-pug](https://github.com/zealot128/tree-sitter-pug)

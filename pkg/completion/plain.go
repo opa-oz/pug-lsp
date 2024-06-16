@@ -89,6 +89,14 @@ func PlainCompletion(meta *CompletionMetaParams, completionItems []protocol.Comp
 		return keywordsCase(completionItems)
 	}
 
+	// parent := node.Parent()
+	// if parent != nil {
+	// 	(*meta.Logger).Println("Parent", parent.Type())
+	// }
+	// if prevSibling != nil {
+	// 	(*meta.Logger).Println("Sibling", prevSibling.Type())
+	// }
+
 	tag := query.FindUpwards(node, query.TagNode, 1)
 	if tag != nil {
 		items := globalTags(completionItems)
