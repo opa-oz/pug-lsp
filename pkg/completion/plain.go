@@ -40,12 +40,23 @@ func keywords(completionItems []protocol.CompletionItem) *[]protocol.CompletionI
 
 	for _, key := range *keytags {
 		keyName := string(key)
-		completionItems = append(completionItems, protocol.CompletionItem{
+		item := protocol.CompletionItem{
 			Label:      keyName,
 			Kind:       &keywordKind,
-			Detail:     &keyName,
 			InsertText: &keyName,
-		})
+		}
+
+		desc, ok := lsp.KeywordToDesc[key]
+		if ok {
+			item.Documentation = protocol.MarkupContent{
+				Kind:  protocol.MarkupKindMarkdown,
+				Value: desc,
+			}
+		} else {
+			item.Detail = &keyName
+		}
+
+		completionItems = append(completionItems, item)
 	}
 
 	return &completionItems

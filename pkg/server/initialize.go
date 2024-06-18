@@ -15,6 +15,8 @@ func (s *Server) initialize(context *glsp.Context, params *protocol.InitializePa
 		ResolveProvider:   utils.PtrBool(true),
 	}
 
+	capabilities.HoverProvider = true
+
 	return protocol.InitializeResult{
 		Capabilities: capabilities,
 		ServerInfo: &protocol.InitializeResultServerInfo{

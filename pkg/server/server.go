@@ -53,6 +53,7 @@ func NewServer(opts ServerOpts) *Server {
 	handler.TextDocumentDidOpen = server.TextDocumentDidOpen
 	handler.TextDocumentDidChange = server.TextDocumentDidChange
 	handler.TextDocumentCompletion = server.TextDocumentCompletion
+	handler.TextDocumentHover = server.TextDocumentHover
 
 	return &server
 }

@@ -17,6 +17,7 @@ An implementation of the Language Protocol Server for [Pug.js](https://pugjs.org
   * [Keywords suggestions](#keywords-suggestions)
     + [`case .. when .. default`](#case--when--default)
     + [`if .. else`](#if--else)
+  * [Hover reference](#hover-reference)
 - [Thanks](#thanks)
 
 <!-- tocstop -->
@@ -90,6 +91,12 @@ If you would like to not output anything in a specific case, add an explicit unb
 #### `if .. else`
 
 ![if-suggestion](docs/if-suggestions.png)
+
+
+### Hover reference
+
+See full desciption on hover!
+![hover-reference](docs/hover-suggestions.png)
 
 
 ## Thanks
