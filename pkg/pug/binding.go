@@ -1,4 +1,3 @@
-// go:build !plugin
 package pug
 
 // #cgo CFLAGS: -std=c11 -fPIC

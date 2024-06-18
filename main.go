@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	_ "github.com/opa-oz/pug-lsp/pkg/pug"
 	"github.com/opa-oz/pug-lsp/pkg/server"
 )
 

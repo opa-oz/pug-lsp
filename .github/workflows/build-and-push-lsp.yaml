@@ -32,6 +32,4 @@ jobs:
           goarch: ${{ matrix.goarch }}
           binary_name: "pug-lsp"
           ldflags: "-s -w"
-          build_command: "make build"
-
 
