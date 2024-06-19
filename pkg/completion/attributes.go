@@ -24,12 +24,22 @@ func GlobalCompletion(meta *CompletionMetaParams, completionItems []protocol.Com
 			}
 		}
 		attrCopy := attr // Create a copy of attr
-		completionItems = append(completionItems, protocol.CompletionItem{
+		item := protocol.CompletionItem{
 			Label:      attrCopy,
 			Kind:       &valueKind,
-			Detail:     &attrCopy,
 			InsertText: html.GetInsertText(attr),
-		})
+		}
+
+		desc, ok := html.AttrToDesc[attr]
+		if ok {
+			item.Documentation = protocol.MarkupContent{
+				Kind:  protocol.MarkupKindMarkdown,
+				Value: desc,
+			}
+		} else {
+			item.Detail = &attrCopy
+		}
+		completionItems = append(completionItems, item)
 	}
 
 	return &completionItems
@@ -81,12 +91,21 @@ func LocalCompletion(meta *CompletionMetaParams, completionItems []protocol.Comp
 			}
 
 			attrCopy := attr // Create a copy of attr
-			completionItems = append(completionItems, protocol.CompletionItem{
+			item := protocol.CompletionItem{
 				Label:      attrCopy,
 				Kind:       &kind,
-				Detail:     &attrCopy,
 				InsertText: html.GetInsertText(attr),
-			})
+			}
+			desc, ok := html.AttrToDesc[attr]
+			if ok {
+				item.Documentation = protocol.MarkupContent{
+					Kind:  protocol.MarkupKindMarkdown,
+					Value: desc,
+				}
+			} else {
+				item.Detail = &attrCopy
+			}
+			completionItems = append(completionItems, item)
 		}
 	}
 	return &completionItems
@@ -114,6 +133,10 @@ func AndCompletion(meta *CompletionMetaParams, completionItems []protocol.Comple
 		Detail:     &details,
 		InsertText: &details,
 		Preselect:  utils.PtrBool(true),
+		Documentation: protocol.MarkupContent{
+			Kind:  protocol.MarkupKindMarkdown,
+			Value: "Pronounced as “and attributes”, the `&attributes` syntax can be used to explode an object into attributes of an element.\n```pug\ndiv#foo(data-bar=\"foo\")&attributes({'data-foo': 'bar'})\n```",
+		},
 	})
 
 	return &completionItems

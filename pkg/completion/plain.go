@@ -67,13 +67,24 @@ func globalTags(completionItems []protocol.CompletionItem) *[]protocol.Completio
 	htmlTags := html.GetTags()
 
 	for _, tag := range *htmlTags {
-		tagCopy := tag
-		completionItems = append(completionItems, protocol.CompletionItem{
+		tagCopy := string(tag)
+		item := protocol.CompletionItem{
 			Label:      tagCopy,
 			Kind:       &valueKind,
-			Detail:     &tagCopy,
 			InsertText: &tagCopy,
-		})
+		}
+
+		desc, ok := html.TagToDesc[tag]
+		if ok {
+			item.Documentation = protocol.MarkupContent{
+				Kind:  protocol.MarkupKindMarkdown,
+				Value: desc,
+			}
+		} else {
+			item.Detail = &tagCopy
+		}
+
+		completionItems = append(completionItems, item)
 	}
 
 	return &completionItems

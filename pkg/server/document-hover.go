@@ -79,6 +79,13 @@ func (s *Server) TextDocumentHover(context *glsp.Context, params *protocol.Hover
 		}
 
 		return ReturnMarkdown(desc), nil
+	case query.AttributeNameNode:
+		desc, ok := html.AttrToDesc[tagRaw]
+		if !ok {
+			return nil, nil
+		}
+
+		return ReturnMarkdown(desc), nil
 	}
 
 	return nil, nil
