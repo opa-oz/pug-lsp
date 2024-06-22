@@ -19,6 +19,7 @@ type Server struct {
 	clientCapabilities protocol.ClientCapabilities
 	handler            *protocol.Handler
 	opts               *ServerOpts
+	name               string
 }
 
 type ServerOpts struct {
@@ -44,6 +45,7 @@ func NewServer(opts ServerOpts) *Server {
 		clientCapabilities: protocol.ClientCapabilities{},
 		handler:            &handler,
 		opts:               &opts,
+		name:               opts.Name,
 	}
 
 	handler.Initialize = server.initialize
@@ -60,5 +62,5 @@ func NewServer(opts ServerOpts) *Server {
 }
 
 func (s *Server) Run() error {
-	return errors.Wrap(s.server.RunStdio(), "pug-lsp")
+	return errors.Wrap(s.server.RunStdio(), s.name)
 }

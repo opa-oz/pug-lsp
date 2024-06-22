@@ -10,6 +10,8 @@ import (
 	protocol "github.com/tliron/glsp/protocol_3_16"
 )
 
+const andAttributesDoc = "Pronounced as “and attributes”, the `&attributes` syntax can be used to explode an object into attributes of an element.\n```pug\ndiv#foo(data-bar=\"foo\")&attributes({'data-foo': 'bar'})\n```"
+
 func (s *Server) CompletionItemResolve(context *glsp.Context, params *protocol.CompletionItem) (*protocol.CompletionItem, error) {
 	compDataRaw, ok := params.Data.(string)
 
@@ -33,7 +35,7 @@ func (s *Server) CompletionItemResolve(context *glsp.Context, params *protocol.C
 			params.Detail = &compData.Def
 			params.Documentation = protocol.MarkupContent{
 				Kind:  protocol.MarkupKindMarkdown,
-				Value: "Pronounced as “and attributes”, the `&attributes` syntax can be used to explode an object into attributes of an element.\n```pug\ndiv#foo(data-bar=\"foo\")&attributes({'data-foo': 'bar'})\n```",
+				Value: andAttributesDoc,
 			}
 		} else if compData.Kind == completion.KeywordKind {
 			key := lsp.Keyword(compData.Def)
