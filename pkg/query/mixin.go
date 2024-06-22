@@ -1,9 +1,8 @@
-package lsp
+package query
 
 import (
 	"strings"
 
-	"github.com/opa-oz/pug-lsp/pkg/query"
 	sitter "github.com/smacker/go-tree-sitter"
 )
 
@@ -15,18 +14,18 @@ type Mixin struct {
 }
 
 func NewMixin(source string, node *sitter.Node, content *string) *Mixin {
-	nameNode := query.FindDownwards(node, query.MixinNameNode, 2)
+	nameNode := FindDownwards(node, MixinNameNode, 2)
 
 	if nameNode == nil {
 		return nil
 	}
 
 	definition := (*content)[nameNode.StartByte():nameNode.EndByte()]
-	mixinAttributes := query.FindDownwards(node, query.MixinAttributesNode, 2)
+	mixinAttributes := FindDownwards(node, MixinAttributesNode, 2)
 	var arguments []string
 
 	if mixinAttributes != nil {
-		attributesRanges, err := query.FindAll(mixinAttributes, query.AttributeNamesQ)
+		attributesRanges, err := FindAll(mixinAttributes, AttributeNamesQ)
 		if err == nil {
 			for _, rng := range *attributesRanges {
 				arguments = append(arguments, strings.Trim((*content)[rng.StartPos:rng.EndPos], ""))

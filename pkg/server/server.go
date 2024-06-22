@@ -54,6 +54,7 @@ func NewServer(opts ServerOpts) *Server {
 	handler.TextDocumentDidChange = server.TextDocumentDidChange
 	handler.TextDocumentCompletion = server.TextDocumentCompletion
 	handler.TextDocumentHover = server.TextDocumentHover
+	handler.CompletionItemResolve = server.CompletionItemResolve
 
 	return &server
 }

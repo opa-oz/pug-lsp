@@ -35,4 +35,5 @@ const (
 	IncludeFilenamesQ Query = "(include (filename) @incl)"
 	DoctypeQ          Query = "(doctype) @doc"
 	MixinDefinitionQ  Query = "(mixin_definition) @def"
+	JSVariablesQ      Query = "(javascript (identifier) @var)"
 )

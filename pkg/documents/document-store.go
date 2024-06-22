@@ -54,7 +54,7 @@ func (ds *DocumentStore) DocumentDidOpen(ctx context.Context, params protocol.Di
 			Content:  &params.TextDocument.Text,
 			Tree:     tree,
 			Includes: make(map[string]*lsp.Include),
-			Mixins:   make(map[string]*lsp.Mixin),
+			Mixins:   make(map[string]*query.Mixin),
 		}
 	}
 

@@ -17,8 +17,9 @@ type Document struct {
 	Tree       *sitter.Tree
 	Content    *string
 	Includes   map[string]*lsp.Include
-	Mixins     map[string]*lsp.Mixin
+	Mixins     map[string]*query.Mixin
 	HasDoctype bool
+	// JSVariables *[]lsp.JSVariable
 }
 
 // ApplyChanges updates the content of the Document from LSP textDocument/didChange events.
@@ -51,13 +52,14 @@ func (d *Document) ApplyChanges(ctx context.Context, changes []interface{}) erro
 
 	d.Tree = newTree
 	d.HasDoctype = query.FindDoctype(newTree)
+	// d.JSVariables = query.FindAllJSVariables(newTree.RootNode(), d.Content)
 	d.RefreshMixins(ctx)
 
 	return nil
 }
 
 func (d *Document) RefreshMixins(ctx context.Context) {
-	d.Mixins = make(map[string]*lsp.Mixin)
+	d.Mixins = make(map[string]*query.Mixin)
 	mixinDefinitions := query.FindMixinDefinitions(d.Tree.RootNode())
 
 	if mixinDefinitions == nil {
@@ -65,7 +67,7 @@ func (d *Document) RefreshMixins(ctx context.Context) {
 	}
 
 	for _, def := range *mixinDefinitions {
-		mixin := lsp.NewMixin(d.URI, def, d.Content)
+		mixin := query.NewMixin(d.URI, def, d.Content)
 
 		if mixin != nil {
 			d.Mixins[mixin.Name] = mixin

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/opa-oz/go-todo/todo"
 	"github.com/opa-oz/pug-lsp/pkg/html"
 	"github.com/opa-oz/pug-lsp/pkg/query"
 	"github.com/opa-oz/pug-lsp/pkg/utils"
@@ -28,17 +27,9 @@ func GlobalCompletion(meta *CompletionMetaParams, completionItems []protocol.Com
 			Label:      attrCopy,
 			Kind:       &valueKind,
 			InsertText: html.GetInsertText(attr),
+			Data:       DataToString(AttributeKind, attr),
 		}
 
-		desc, ok := html.AttrToDesc[attr]
-		if ok {
-			item.Documentation = protocol.MarkupContent{
-				Kind:  protocol.MarkupKindMarkdown,
-				Value: desc,
-			}
-		} else {
-			item.Detail = &attrCopy
-		}
 		completionItems = append(completionItems, item)
 	}
 
@@ -95,15 +86,7 @@ func LocalCompletion(meta *CompletionMetaParams, completionItems []protocol.Comp
 				Label:      attrCopy,
 				Kind:       &kind,
 				InsertText: html.GetInsertText(attr),
-			}
-			desc, ok := html.AttrToDesc[attr]
-			if ok {
-				item.Documentation = protocol.MarkupContent{
-					Kind:  protocol.MarkupKindMarkdown,
-					Value: desc,
-				}
-			} else {
-				item.Detail = &attrCopy
+				Data:       DataToString(AttributeKind, attr),
 			}
 			completionItems = append(completionItems, item)
 		}
@@ -114,7 +97,6 @@ func LocalCompletion(meta *CompletionMetaParams, completionItems []protocol.Comp
 func AndCompletion(meta *CompletionMetaParams, completionItems []protocol.CompletionItem) *[]protocol.CompletionItem {
 	snippetKind := protocol.CompletionItemKindSnippet
 
-	// node := meta.doc.GetAtPosition(&meta.params.Position)
 	node := meta.CurrentNode
 	if node == nil {
 		return &completionItems
@@ -125,18 +107,14 @@ func AndCompletion(meta *CompletionMetaParams, completionItems []protocol.Comple
 		return &completionItems
 	}
 
-	attributes := todo.String("Move &attributes to const", "attributes(")
+	attributes := "attributes("
 	details := fmt.Sprintf("%s{ })", attributes)
 	completionItems = append(completionItems, protocol.CompletionItem{
 		Label:      attributes,
 		Kind:       &snippetKind,
-		Detail:     &details,
 		InsertText: &details,
 		Preselect:  utils.PtrBool(true),
-		Documentation: protocol.MarkupContent{
-			Kind:  protocol.MarkupKindMarkdown,
-			Value: "Pronounced as “and attributes”, the `&attributes` syntax can be used to explode an object into attributes of an element.\n```pug\ndiv#foo(data-bar=\"foo\")&attributes({'data-foo': 'bar'})\n```",
-		},
+		Data:       DataToString(AndAttributesKind, details),
 	})
 
 	return &completionItems

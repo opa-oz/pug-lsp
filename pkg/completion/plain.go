@@ -44,16 +44,7 @@ func keywords(completionItems []protocol.CompletionItem) *[]protocol.CompletionI
 			Label:      keyName,
 			Kind:       &keywordKind,
 			InsertText: &keyName,
-		}
-
-		desc, ok := lsp.KeywordToDesc[key]
-		if ok {
-			item.Documentation = protocol.MarkupContent{
-				Kind:  protocol.MarkupKindMarkdown,
-				Value: desc,
-			}
-		} else {
-			item.Detail = &keyName
+			Data:       DataToString(KeywordKind, keyName),
 		}
 
 		completionItems = append(completionItems, item)
@@ -72,16 +63,7 @@ func globalTags(completionItems []protocol.CompletionItem) *[]protocol.Completio
 			Label:      tagCopy,
 			Kind:       &valueKind,
 			InsertText: &tagCopy,
-		}
-
-		desc, ok := html.TagToDesc[tag]
-		if ok {
-			item.Documentation = protocol.MarkupContent{
-				Kind:  protocol.MarkupKindMarkdown,
-				Value: desc,
-			}
-		} else {
-			item.Detail = &tagCopy
+			Data:       DataToString(TagKind, tagCopy),
 		}
 
 		completionItems = append(completionItems, item)

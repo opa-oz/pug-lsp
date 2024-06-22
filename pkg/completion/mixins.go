@@ -36,12 +36,14 @@ func docMixins(doc *documents.Document, completionItems []protocol.CompletionIte
 			insert += "()"
 		}
 
-		completionItems = append(completionItems, protocol.CompletionItem{
+		item := protocol.CompletionItem{
 			Label:      def.Name,
 			Kind:       &functionKind,
-			Detail:     &def.Definition,
 			InsertText: &insert,
-		})
+			Data:       DataToString(MixinKind, def.Definition),
+		}
+
+		completionItems = append(completionItems, item)
 	}
 
 	return &completionItems
