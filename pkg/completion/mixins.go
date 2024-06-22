@@ -1,20 +1,19 @@
 package completion
 
 import (
-	"github.com/opa-oz/pug-lsp/pkg/documents"
 	"github.com/opa-oz/pug-lsp/pkg/query"
 	protocol "github.com/tliron/glsp/protocol_3_16"
 )
 
-// docMixins generates completion items for mixins defined in a document.
+// docMixins generates completion items for mixins defined in a document and included docs.
 //
-// It iterates through the mixins defined in the provided document (`doc`) and creates
+// It iterates through the mixins and creates
 // completion items based on each mixin's name and optional arguments. If a mixin's name
 // matches the `exclude` string, it skips creating a completion item for that mixin.
 //
 // Parameters:
 //
-//	doc *documents.Document - The document containing mixin definitions.
+//	mixins *[]*query.Mixin - Flat list opf all mixins.
 //	completionItems []protocol.CompletionItem - Existing list of completion items to append to.
 //	exclude string - The name of a mixin to exclude from completion items.
 //
@@ -23,10 +22,10 @@ import (
 //	*[]protocol.CompletionItem - A pointer to a slice of protocol.CompletionItem containing
 //	                             completion items for mixins. Returns nil if the document
 //	                             or completion items slice is nil.
-func docMixins(doc *documents.Document, completionItems []protocol.CompletionItem, exclude string) *[]protocol.CompletionItem {
+func docMixins(mixins *[]*query.Mixin, completionItems []protocol.CompletionItem, exclude string) *[]protocol.CompletionItem {
 	functionKind := protocol.CompletionItemKindFunction
 
-	for _, def := range doc.Mixins {
+	for _, def := range *mixins {
 		insert := def.Name
 		if insert == exclude {
 			continue
@@ -63,17 +62,8 @@ func MixinsCompletion(meta *CompletionMetaParams, completionItems []protocol.Com
 		}
 	}
 
-	completionItems = *docMixins(meta.Doc, completionItems, excludeMixin)
-	for _, include := range meta.Doc.Includes {
-		doc, ok := meta.DocumentStore.Get(*include.URI)
-
-		if !ok {
-			(*meta.Logger).Println("Something shady with include", include.Path)
-			continue
-		}
-
-		completionItems = *docMixins(doc, completionItems, excludeMixin)
-	}
+	mixins := meta.DocumentStore.FlatMixins(meta.Doc)
+	completionItems = *docMixins(mixins, completionItems, excludeMixin)
 
 	return &completionItems
 }

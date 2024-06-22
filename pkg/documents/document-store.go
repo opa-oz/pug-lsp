@@ -111,6 +111,39 @@ func (ds *DocumentStore) LoadIncludedFile(ctx context.Context, include *lsp.Incl
 	ds.DocumentDidOpen(ctx, params)
 }
 
+func (ds *DocumentStore) FlatMixins(doc *Document) *[]*query.Mixin {
+	mixinsCount := len(doc.Mixins)
+
+	for _, include := range doc.Includes {
+		incDoc, ok := ds.Get(*include.URI)
+		if !ok {
+			continue
+		}
+		mixinsCount += len(incDoc.Mixins)
+	}
+	mixins := make([]*query.Mixin, mixinsCount)
+	curr := 0
+
+	for _, def := range doc.Mixins {
+		mixins[curr] = def
+		curr += 1
+	}
+
+	for _, include := range doc.Includes {
+		incDoc, ok := ds.Get(*include.URI)
+		if !ok {
+			continue
+		}
+
+		for _, def := range incDoc.Mixins {
+			mixins[curr] = def
+			curr += 1
+		}
+	}
+
+	return &mixins
+}
+
 func (ds *DocumentStore) partialToUri(original string, doc *Document) string {
 	parentParts := strings.Split(doc.Path, "/")
 	parentFolder := parentParts[0 : len(parentParts)-1] // end of path is always file, remove it

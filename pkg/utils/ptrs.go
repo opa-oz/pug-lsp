@@ -15,3 +15,7 @@ package utils
 func PtrBool(input bool) *bool {
 	return &input
 }
+
+func PtrIsTrue(v *bool) bool {
+	return v != nil && *v == true
+}

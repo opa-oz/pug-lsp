@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/opa-oz/pug-lsp/pkg/query"
+	"github.com/opa-oz/pug-lsp/pkg/utils"
 	"github.com/tliron/glsp"
 	protocol "github.com/tliron/glsp/protocol_3_16"
 )
@@ -29,6 +30,26 @@ func (s *Server) TextDocumentDefinition(context *glsp.Context, params *protocol.
 				return protocol.Location{
 					URI: *include.URI,
 				}, nil
+			}
+		}
+	}
+
+	if nodeType == query.MixinNameNode && (node.Parent() != nil && query.NodeType(node.Parent().Type()) == query.MixinNode) {
+		mixins := s.documentStore.FlatMixins(doc)
+		targetMixin := strings.Trim((*doc.Content)[node.StartByte():node.EndByte()], " ")
+
+		for _, mixin := range *mixins {
+			if mixin.Name == targetMixin {
+				if utils.PtrIsTrue(s.clientCapabilities.TextDocument.Definition.LinkSupport) {
+					return protocol.LocationLink{
+						TargetURI:            mixin.Source,
+						OriginSelectionRange: mixin.Range,
+					}, nil
+				} else {
+					return protocol.Location{
+						URI: *&mixin.Source,
+					}, nil
+				}
 			}
 		}
 	}
