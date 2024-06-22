@@ -16,6 +16,7 @@ func (s *Server) initialize(context *glsp.Context, params *protocol.InitializePa
 	}
 
 	capabilities.HoverProvider = true
+	capabilities.DefinitionProvider = true
 
 	return protocol.InitializeResult{
 		Capabilities: capabilities,

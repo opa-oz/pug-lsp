@@ -24,6 +24,8 @@ const (
 	MixinNameNode       NodeType = "mixin_name"
 	MixinAttributesNode NodeType = "mixin_attributes"
 	KeywordNode         NodeType = "keyword"
+	FilenameNode        NodeType = "filename"
+	IncludeNode         NodeType = "include"
 )
 
 var MaxDepth = todo.Int("Is 5 enough?", 5)
