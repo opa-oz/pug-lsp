@@ -4,7 +4,6 @@ import (
 	"context"
 	"testing"
 
-	"github.com/opa-oz/pug-lsp/pkg/lsp"
 	"github.com/opa-oz/pug-lsp/pkg/pug"
 	"github.com/opa-oz/pug-lsp/pkg/query"
 	"github.com/stretchr/testify/assert"
@@ -58,7 +57,7 @@ func TestNewMixinWithoutArgs(t *testing.T) {
 	assert.NotNil(t, mixinDef)
 	assert.Equal(t, mixinDef.Type(), string(query.MixinDefinitionNode))
 
-	mixin := lsp.NewMixin("myfile.pug", mixinDef, &content)
+	mixin := query.NewMixin("myfile.pug", mixinDef, &content)
 
 	assert.NotNil(t, mixin)
 	assert.Equal(t, mixin.Source, "myfile.pug")

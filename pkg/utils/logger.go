@@ -3,7 +3,9 @@ package utils
 import (
 	"io"
 	"log"
-	"os"
+
+	"github.com/tliron/commonlog"
+	_ "github.com/tliron/commonlog/simple"
 )
 
 // Logger can be used to report logging messages.
@@ -36,23 +38,25 @@ func (l *FileLogger) Err(err error) {
 	l.Logger.Printf("error: %v", err)
 }
 
-type StdLogger struct {
-	Logger *log.Logger
+type SilentLogger struct {
+	Logger *commonlog.Logger
 }
 
-func NewStdLogger(prefix string, flags int) *StdLogger {
-	return &StdLogger{
-		Logger: log.New(os.Stdout, prefix, flags),
+func NewSilentLogger(prefix string) *SilentLogger {
+	logger := commonlog.GetLogger(prefix)
+	return &SilentLogger{
+		Logger: &logger,
 	}
 }
-func (l *StdLogger) Printf(format string, v ...interface{}) {
-	l.Logger.Printf(format, v...)
+
+func (l *SilentLogger) Printf(format string, v ...interface{}) {
+	(*l.Logger).Noticef(format, v...)
 }
 
-func (l *StdLogger) Println(v ...interface{}) {
-	l.Logger.Println(v...)
+func (l *SilentLogger) Println(v ...interface{}) {
+	(*l.Logger).Notice("Println:", v...)
 }
 
-func (l *StdLogger) Err(err error) {
-	l.Logger.Printf("error: %v", err)
+func (l *SilentLogger) Err(err error) {
+	(*l.Logger).Errorf("error: %v", err)
 }

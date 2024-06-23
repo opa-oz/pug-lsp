@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -10,13 +11,19 @@ import (
 
 const lsName = "Pug LSP"
 const version string = "0.0.1"
+const local = false
 
 func main() {
-	f, err := os.OpenFile("/Users/vladimirlevin/Repos/pug-lsp.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-	if err != nil {
-		log.Fatalf("error opening file: %v", err)
+	var f *os.File
+	var err error
+	if local {
+		home, _ := os.UserHomeDir()
+		f, err = os.OpenFile(fmt.Sprintf("%s/Repos/pug-lsp.log", home), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		if err != nil {
+			log.Fatalf("error opening file: %v", err)
+		}
+		defer f.Close()
 	}
-	defer f.Close()
 
 	server := server.NewServer(
 		server.ServerOpts{

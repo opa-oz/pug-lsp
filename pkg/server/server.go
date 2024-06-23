@@ -30,6 +30,9 @@ type ServerOpts struct {
 }
 
 func NewServer(opts ServerOpts) *Server {
+	if opts.LogFile == nil {
+		opts.LogFile = io.Discard
+	}
 	logger := utils.NewFileLogger(opts.LogFile, fmt.Sprintf("[%s]\t", opts.Name), 10)
 	fs, _ := utils.NewFileStore("", logger)
 

@@ -11,7 +11,7 @@ func TestNewInclude(t *testing.T) {
 	original := "src/mixins/logo"
 	path := "/Users/opa-oz/test/main.pug"
 
-	include := lsp.NewInclude(&original, &path)
+	include := lsp.NewInclude(&original, &path, nil)
 
 	expectedPrefix := "mixins"
 	expectedUri := "file:///Users/opa-oz/test/main.pug"
