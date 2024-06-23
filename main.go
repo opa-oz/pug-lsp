@@ -10,7 +10,7 @@ import (
 )
 
 const lsName = "Pug LSP"
-const version string = "0.0.1"
+const version string = "0.1.0"
 const local = false
 
 func main() {
