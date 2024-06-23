@@ -1,8 +1,8 @@
-name: release
+name: Build CI
 on:
    push:
      branches:
-       - "buildsystem"
+       - "main"
 
 jobs:
   release:
