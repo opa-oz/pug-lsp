@@ -6,15 +6,14 @@ on:
       - v*
 jobs:
   release:
-    runs-on: ubuntu-latest
+    runs-on: [ 'ubuntu-latest' ]
     steps:
-      - name: checkout code
+      - name: Checkout code
         uses: actions/checkout@v4
       - run: git fetch --prune --unshallow
-      - name: setup dependencies
+      - name: Setup dependencies
         uses: actions/setup-go@v2
-      - name: setup release environment
-        run: |-
-          echo 'GITHUB_TOKEN=${{ github.token }}' > .release-env
-      - name: release publish
+      - name: Release publish
         run: make release
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
