@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/opa-oz/go-todo/todo"
 	"github.com/opa-oz/pug-lsp/pkg/lsp"
@@ -142,6 +143,19 @@ func (ds *DocumentStore) FlatMixins(doc *Document) *[]*query.Mixin {
 	}
 
 	return &mixins
+}
+
+func (ds *DocumentStore) RefreshDiagnostics(doc *Document, delay bool) *[]protocol.Diagnostic {
+	diags := []protocol.Diagnostic{}
+
+	if delay {
+		time.Sleep(300 * time.Millisecond)
+	}
+	doc.NeedToRefreshDiagnostics = false
+
+	diags = append(diags, *DiagnostMixins(doc, ds)...)
+
+	return &diags
 }
 
 func (ds *DocumentStore) partialToUri(original string, doc *Document) string {

@@ -18,6 +18,13 @@ func (s *Server) initialize(context *glsp.Context, params *protocol.InitializePa
 	capabilities.HoverProvider = true
 	capabilities.DefinitionProvider = true
 
+	change := protocol.TextDocumentSyncKindIncremental
+	capabilities.TextDocumentSync = protocol.TextDocumentSyncOptions{
+		OpenClose: utils.PtrBool(true),
+		Change:    &change,
+		Save:      utils.PtrBool(true),
+	}
+
 	return protocol.InitializeResult{
 		Capabilities: capabilities,
 		ServerInfo: &protocol.InitializeResultServerInfo{

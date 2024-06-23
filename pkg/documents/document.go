@@ -12,13 +12,14 @@ import (
 )
 
 type Document struct {
-	URI        protocol.DocumentUri
-	Path       string
-	Tree       *sitter.Tree
-	Content    *string
-	Includes   map[string]*lsp.Include
-	Mixins     map[string]*query.Mixin
-	HasDoctype bool
+	URI                      protocol.DocumentUri
+	Path                     string
+	Tree                     *sitter.Tree
+	Content                  *string
+	Includes                 map[string]*lsp.Include
+	Mixins                   map[string]*query.Mixin
+	HasDoctype               bool
+	NeedToRefreshDiagnostics bool
 	// JSVariables *[]lsp.JSVariable
 }
 

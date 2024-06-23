@@ -34,8 +34,10 @@ type Query string
 
 const (
 	AttributeNamesQ   Query = "(attribute_name) @attr"
+	AttributesQ       Query = "(attribute) @attr"
 	IncludeFilenamesQ Query = "(include (filename) @incl)"
 	DoctypeQ          Query = "(doctype) @doc"
 	MixinDefinitionQ  Query = "(mixin_definition) @def"
+	MixinUseQ         Query = "(mixin_use) @use"
 	JSVariablesQ      Query = "(javascript (identifier) @var)"
 )

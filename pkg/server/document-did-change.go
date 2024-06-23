@@ -3,7 +3,6 @@ package server
 import (
 	"context"
 
-	"github.com/opa-oz/go-todo/todo"
 	"github.com/tliron/glsp"
 	protocol "github.com/tliron/glsp/protocol_3_16"
 )
@@ -19,7 +18,17 @@ func (s *Server) TextDocumentDidChange(ctx *glsp.Context, params *protocol.DidCh
 		s.logger.Err(err)
 		return nil
 	}
-	todo.T("Refresh diagnostics")
+
+	if !doc.NeedToRefreshDiagnostics {
+		doc.NeedToRefreshDiagnostics = true
+		go func() {
+			diags := s.documentStore.RefreshDiagnostics(doc, true)
+			go ctx.Notify(protocol.ServerTextDocumentPublishDiagnostics, protocol.PublishDiagnosticsParams{
+				URI:         doc.URI,
+				Diagnostics: *diags,
+			})
+		}()
+	}
 
 	return nil
 }
