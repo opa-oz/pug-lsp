@@ -17,7 +17,7 @@ builds:
       - "-mod=readonly"
       - -trimpath
     ldflags:
-      - "-tags={{ .Env.BUILD_TAGS }}"
+      - -s -w -X main.version={{.Version}}
   - id: darwin-arm64
     binary: pug-lsp
     main: ./main.go
@@ -32,7 +32,7 @@ builds:
       - "-mod=readonly"
       - -trimpath
     ldflags:
-      - "-tags={{ .Env.BUILD_TAGS }}"
+      - -s -w -X main.version={{.Version}}
 universal_binaries:
   - id: darwin-universal
     ids:
