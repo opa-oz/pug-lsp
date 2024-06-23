@@ -1,0 +1,69 @@
+project_name: pug-lsp
+env:
+  - CO111MODULE=on
+  - CGO_ENABLED=1
+builds:
+  - id: darwin-amd64
+    binary: pug-lsp
+    main: ./main.go
+    goarch:
+      - amd64
+    goos:
+      - darwin
+    env:
+      - CC=o64-clang
+      - CXX=o64-clang++
+    flags:
+      - "-mod=readonly"
+      - -trimpath
+    ldflags:
+      - "-tags={{ .Env.BUILD_TAGS }}"
+  - id: darwin-arm64
+    binary: pug-lsp
+    main: ./main.go
+    goarch:
+      - arm64
+    goos:
+      - darwin
+    env:
+      - CC=oa64-clang
+      - CXX=oa64-clang++
+    flags:
+      - "-mod=readonly"
+      - -trimpath
+    ldflags:
+      - "-tags={{ .Env.BUILD_TAGS }}"
+universal_binaries:
+  - id: darwin-universal
+    ids:
+      - darwin-amd64
+      - darwin-arm64
+    replace: true
+    name_template: "pug-lsp"
+archives:
+  - format: zip
+    id: w/version
+    builds:
+      - darwin-universal
+      - darwin-amd64
+      - darwin-arm64
+    name_template: "pug-lsp_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    wrap_in_directory: false
+  - format: zip
+    id: wo/version
+    builds:
+      - darwin-universal
+      - darwin-amd64
+      - darwin-arm64
+    name_template: "pug-lsp_{{ .Os }}_{{ .Arch }}"
+    wrap_in_directory: false
+checksum:
+  name_template: "pug-lsp_{{ .Version }}_checksums.txt"
+
+release:
+  mode: replace
+  github:
+    owner: opa-oz
+    name: pug-lsp
+  prerelease: auto
+  draft: true
