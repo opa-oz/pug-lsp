@@ -1,35 +1,20 @@
 name: "Build and push new LSP"
 
 on:
-  workflow_dispatch:
-  release:
-    types: [ created ]
-
-permissions:
-  contents: write
-  packages: write
-
+  push:
+    tags:
+      - v*
 jobs:
-  releases-matrix:
-    name: Release Go Binary
+  release:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        goos: [ linux, windows, darwin ]
-        goarch: [ "386", amd64, arm64 ]
-        exclude:
-          - goarch: "386"
-            goos: darwin
-          - goarch: arm64
-            goos: windows
     steps:
-      - uses: actions/checkout@v4
-      - uses: wangyoucao577/go-release-action@v1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          goversion: "1.22"
-          goos: ${{ matrix.goos }}
-          goarch: ${{ matrix.goarch }}
-          binary_name: "pug-lsp"
-          ldflags: "-s -w"
-
+      - name: checkout code
+        uses: actions/checkout@v4
+      - run: git fetch --prune --unshallow
+      - name: setup dependencies
+        uses: actions/setup-go@v2
+      - name: setup release environment
+        run: |-
+          echo 'GITHUB_TOKEN=${{ github.token }}' > .release-env
+      - name: release publish
+        run: make release

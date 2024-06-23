@@ -1,0 +1,120 @@
+project_name: pug-lsp
+env:
+  - CO111MODULE=on
+  - CGO_ENABLED=1
+builds:
+  - id: darwin-amd64
+    binary: pug-lsp
+    main: ./main.go
+    goarch:
+      - amd64
+    goos:
+      - darwin
+    env:
+      - CC=o64-clang
+      - CXX=o64-clang++
+    flags:
+      - "-mod=readonly"
+      - -trimpath
+    ldflags:
+      - -s -w -X main.version={{.Version}}
+  - id: darwin-arm64
+    binary: pug-lsp
+    main: ./main.go
+    goarch:
+      - arm64
+    goos:
+      - darwin
+    env:
+      - CC=oa64-clang
+      - CXX=oa64-clang++
+    flags:
+      - "-mod=readonly"
+      - -trimpath
+    ldflags:
+      - -s -w -X main.version={{.Version}}
+  - id: linux-amd64
+    binary: pug-lsp
+    main: ./main.go
+    goarch:
+      - amd64
+    goos:
+      - linux
+    env:
+      - CC=x86_64-linux-gnu-gcc
+      - CXX=x86_64-linux-gnu-g++
+    flags:
+      - "-mod=readonly"
+      - -trimpath
+    ldflags:
+      - -s -w -X main.version={{.Version}}
+  - id: linux-arm64
+    binary: pug-lsp
+    main: ./main.go
+    goarch:
+      - arm64
+    goos:
+      - linux
+    env:
+      - CC=aarch64-linux-gnu-gcc
+      - CXX=aarch64-linux-gnu-g++
+    flags:
+      - "-mod=readonly"
+      - -trimpath
+    ldflags:
+      - -s -w -X main.version={{.Version}}
+  - id: windows-amd64
+    binary: pug-lsp
+    main: ./main.go
+    goarch:
+      - amd64
+    goos:
+      - windows
+    env:
+      - CC=x86_64-w64-mingw32-gcc
+      - CXX=x86_64-w64-mingw32-g++
+    flags:
+      - "-mod=readonly"
+      - -trimpath
+    ldflags:
+      - -s -w -X main.version={{.Version}}
+universal_binaries:
+  - id: darwin-universal
+    ids:
+      - darwin-amd64
+      - darwin-arm64
+    replace: true
+    name_template: "pug-lsp"
+archives:
+  - format: zip
+    id: w/version
+    builds:
+      - darwin-universal
+      - darwin-amd64
+      - darwin-arm64
+      - linux-amd64
+      - linux-arm64
+      - windows-amd64
+    name_template: "pug-lsp_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    wrap_in_directory: false
+  - format: zip
+    id: wo/version
+    builds:
+      - darwin-universal
+      - darwin-amd64
+      - darwin-arm64
+      - linux-amd64
+      - linux-arm64
+      - windows-amd64
+    name_template: "pug-lsp_{{ .Os }}_{{ .Arch }}"
+    wrap_in_directory: false
+checksum:
+  name_template: "pug-lsp_{{ .Version }}_checksums.txt"
+
+release:
+  mode: replace
+  github:
+    owner: opa-oz
+    name: pug-lsp
+  prerelease: auto
+  draft: true
