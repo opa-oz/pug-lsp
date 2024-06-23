@@ -1,0 +1,13 @@
+include mixins/header
+include mixins/paragraph
+
+doctype html
+html(lang="en")
+    include includes/head
+
+    body(onload="")
+       +h2("My subheader")
+       +paragraph
+            span My paragraph
+
+    include includes/footer

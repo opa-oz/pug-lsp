@@ -6,6 +6,7 @@ An implementation of the Language Protocol Server for [Pug.js](https://pugjs.org
 
 - [Features](#features)
   * [Note](#note)
+  * [Freestyle](#freestyle)
   * [Tags suggestions](#tags-suggestions)
   * [Attributes suggestions](#attributes-suggestions)
     + [Auto suggest common attributes (such as `style`, `class`, `title`) for tags](#auto-suggest-common-attributes-such-as-style-class-title-for-tags)
@@ -18,6 +19,9 @@ An implementation of the Language Protocol Server for [Pug.js](https://pugjs.org
     + [`case .. when .. default`](#case--when--default)
     + [`if .. else`](#if--else)
   * [Hover reference](#hover-reference)
+  * [Diagnostics](#diagnostics)
+    + [Include](#include)
+    + [Mixins](#mixins)
 - [Thanks](#thanks)
 
 <!-- tocstop -->
@@ -30,44 +34,52 @@ An implementation of the Language Protocol Server for [Pug.js](https://pugjs.org
 
 Project is under heavy development. Current functionality can be change in stable release.
 
+### Freestyle
+
+![preview](docs/preview.gif)
+
+
+_Yes, go-to-definition supported_
+
+
 ### Tags suggestions
 
 Auto suggest list of HTML5 tags.
 
-![tags-suggestions](docs/tags-suggestions.png)
+![tags-suggestions](docs/tags-and-keyword-suggestions.png)
 
 ### Attributes suggestions
 
 #### Auto suggest common attributes (such as `style`, `class`, `title`) for tags
 
-![common-attributes](docs/common-attributes.png)
+![common-attributes](docs/attributes-suggestion.png)
 
 #### Auto suggest events (such as `onclick`, `onenter`) for tags
 
-![events-attributes](docs/events-attributes.png)
+![events-attributes](docs/events-suggestion.png)
 
 #### Auto suggest tag-specific attributes (such as `href` for `a`)
 
-![special-attributes](docs/special-attributes.png)
+![special-attributes](docs/specific-attributes-siggestions.png)
 
 #### `&attributes` snippet
 
 _Yes, it's [a real feature](https://pugjs.org/language/attributes.html#attributes) of Pug_
 
-![attributes-shortcut](docs/attributes-shortcut.png)
+![attributes-shortcut](docs/and-attributes-suggestion.png)
 
 ### Mixins suggestions
 
 Look through included files and suggest defined mixins!
 
-![mixins](docs/mixins-suggestions.png)
+![mixins](docs/mixins-suggestion.png)
 
 
 ### `Doctype` suggestions
 
 PugJS has [a pre-defined list](https://pugjs.org/language/doctype.html) of possible doctypes. 
 
-![doctypes](docs/doctypes.png)
+![doctypes](docs/doctype-suggestion.png)
 
 ### Keywords suggestions
 
@@ -75,7 +87,7 @@ PugJS has [a pre-defined list](https://pugjs.org/language/doctype.html) of possi
 
 Pug-LSP simply follows [Pug's implementation](https://pugjs.org/language/case.html)
 
-![case-suggestions](/docs/case-suggestions.png)
+![case-suggestions](/docs/default-snippet.png)
 
 _Note_ [Case Fall Through](https://pugjs.org/language/case.html#case-fall-through)
 
@@ -90,13 +102,28 @@ If you would like to not output anything in a specific case, add an explicit unb
 
 #### `if .. else`
 
-![if-suggestion](docs/if-suggestions.png)
+![if-suggestion](docs/if-suggest.png)
 
 
 ### Hover reference
 
 See full desciption on hover!
-![hover-reference](docs/hover-suggestions.png)
+![hover-reference](docs/on-hover.png)
+
+### Diagnostics
+
+#### Include 
+
+Check if filepath is valid
+![includes-diag](docs/includes-diagnostic.png)
+
+#### Mixins
+
+1. Check if mixin exists (_or included_)
+![mixins-diag](docs/mixins-diagnostic.png)
+
+2. Check if desired arguments passed
+![mixin-arguments](docs/mixin-arguments-check.png)
 
 
 ## Thanks
