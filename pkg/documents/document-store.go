@@ -54,8 +54,8 @@ func (ds *DocumentStore) DocumentDidOpen(ctx context.Context, params protocol.Di
 			Path:     path,
 			Content:  &params.TextDocument.Text,
 			Tree:     tree,
-			Includes: make(map[string]*lsp.Include),
-			Mixins:   make(map[string]*query.Mixin),
+			Includes: make(IncludesMap),
+			Mixins:   make(MixinsMap),
 		}
 	}
 
@@ -66,8 +66,15 @@ func (ds *DocumentStore) DocumentDidOpen(ctx context.Context, params protocol.Di
 	return doc, nil
 }
 
-func (ds *DocumentStore) RefreshIncludes(ctx context.Context, doc *Document) {
+func (ds *DocumentStore) RefreshIncludes(ctx context.Context, doc *Document, delay bool) {
+	if delay {
+		time.Sleep(300 * time.Millisecond)
+	}
+
+	newIncludes := make(IncludesMap)
 	includes, err := query.FindAllIncludes(doc.Tree)
+	doc.NeedToRefreshIncludes = false
+
 	if err != nil {
 		ds.logger.Err(err)
 		return
@@ -81,23 +88,28 @@ func (ds *DocumentStore) RefreshIncludes(ctx context.Context, doc *Document) {
 			continue
 		}
 
-		newInclude := lsp.NewInclude(&original, &uri)
-		_, ok := doc.Includes[original]
+		newInclude := lsp.NewInclude(&original, &uri, strRange.Range)
+		oldInclude, ok := doc.Includes[original]
 
 		if !ok {
-			doc.Includes[original] = newInclude
-			ds.LoadIncludedFile(ctx, newInclude)
+			isValid := ds.LoadIncludedFile(ctx, newInclude)
+			newInclude.IsValid = isValid
+			newIncludes[original] = newInclude
+		} else {
+			newInclude.IsValid = oldInclude.IsValid
+			newIncludes[original] = newInclude
 		}
-
 	}
+
+	doc.Includes = newIncludes
 }
 
-func (ds *DocumentStore) LoadIncludedFile(ctx context.Context, include *lsp.Include) {
+func (ds *DocumentStore) LoadIncludedFile(ctx context.Context, include *lsp.Include) bool {
 	content, err := os.ReadFile(*include.Path)
 
 	if err != nil {
 		ds.logger.Err(err)
-		return
+		return false
 	}
 
 	params := protocol.DidOpenTextDocumentParams{
@@ -110,6 +122,7 @@ func (ds *DocumentStore) LoadIncludedFile(ctx context.Context, include *lsp.Incl
 	}
 
 	ds.DocumentDidOpen(ctx, params)
+	return true
 }
 
 func (ds *DocumentStore) FlatMixins(doc *Document) *[]*query.Mixin {
@@ -151,10 +164,11 @@ func (ds *DocumentStore) RefreshDiagnostics(doc *Document, delay bool) *[]protoc
 	if delay {
 		time.Sleep(300 * time.Millisecond)
 	}
-	doc.NeedToRefreshDiagnostics = false
 
 	diags = append(diags, *DiagnostMixins(doc, ds)...)
+	diags = append(diags, *DiagnostIncludes(doc)...)
 
+	doc.NeedToRefreshDiagnostics = false
 	return &diags
 }
 

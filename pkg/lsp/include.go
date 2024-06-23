@@ -1,15 +1,21 @@
 package lsp
 
-import "strings"
+import (
+	"strings"
+
+	protocol "github.com/tliron/glsp/protocol_3_16"
+)
 
 type Include struct {
 	Original *string
 	Path     *string
 	Prefix   *string // This is prefix for suggestions - if you `include mixins/logo`, you should import it as `+mixins.logo`
 	URI      *string
+	IsValid  bool
+	Range    *protocol.Range
 }
 
-func NewInclude(original, path *string) *Include {
+func NewInclude(original, path *string, rng *protocol.Range) *Include {
 	parts := strings.Split(*original, "/")
 	var prefix string
 
@@ -26,5 +32,6 @@ func NewInclude(original, path *string) *Include {
 		Path:     path,
 		Prefix:   &prefix,
 		URI:      &uri,
+		Range:    rng,
 	}
 }

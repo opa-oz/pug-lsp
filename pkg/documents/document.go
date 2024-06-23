@@ -11,15 +11,19 @@ import (
 	protocol "github.com/tliron/glsp/protocol_3_16"
 )
 
+type IncludesMap = map[string]*lsp.Include
+type MixinsMap = map[string]*query.Mixin
+
 type Document struct {
 	URI                      protocol.DocumentUri
 	Path                     string
 	Tree                     *sitter.Tree
 	Content                  *string
-	Includes                 map[string]*lsp.Include
-	Mixins                   map[string]*query.Mixin
+	Includes                 IncludesMap
+	Mixins                   MixinsMap
 	HasDoctype               bool
 	NeedToRefreshDiagnostics bool
+	NeedToRefreshIncludes    bool
 	// JSVariables *[]lsp.JSVariable
 }
 
@@ -60,7 +64,7 @@ func (d *Document) ApplyChanges(ctx context.Context, changes []interface{}) erro
 }
 
 func (d *Document) RefreshMixins(ctx context.Context) {
-	d.Mixins = make(map[string]*query.Mixin)
+	d.Mixins = make(MixinsMap)
 	mixinDefinitions := query.FindMixinDefinitions(d.Tree.RootNode())
 
 	if mixinDefinitions == nil {

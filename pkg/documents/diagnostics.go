@@ -29,6 +29,16 @@ func NewDiagnostic(node *sitter.Node, message string) protocol.Diagnostic {
 		},
 	}
 }
+func NewDiagnosticFromRange(rng *protocol.Range, message string) protocol.Diagnostic {
+	severity := protocol.DiagnosticSeverityError
+	sourceCp := source
+	return protocol.Diagnostic{
+		Severity: &severity,
+		Source:   &sourceCp,
+		Message:  message,
+		Range:    *rng,
+	}
+}
 
 func DiagnostMixins(doc *Document, ds *DocumentStore) *[]protocol.Diagnostic {
 	diags := []protocol.Diagnostic{}
@@ -40,8 +50,11 @@ func DiagnostMixins(doc *Document, ds *DocumentStore) *[]protocol.Diagnostic {
 	}
 
 	mixinsFlat := ds.FlatMixins(doc)
-	existingMixins := make(map[string]*query.Mixin)
+	existingMixins := make(MixinsMap)
 	for _, mixin := range *mixinsFlat {
+		if mixin == nil {
+			continue
+		}
 		existingMixins[mixin.Name] = mixin
 	}
 
@@ -67,6 +80,18 @@ func DiagnostMixins(doc *Document, ds *DocumentStore) *[]protocol.Diagnostic {
 					diags = append(diags, NewDiagnostic(nameNode, fmt.Sprintf("Extra arguments found for mixin `%s`\n\twant: `%s`", name, origin.Definition)))
 				}
 			}
+		}
+	}
+
+	return &diags
+}
+
+func DiagnostIncludes(doc *Document) *[]protocol.Diagnostic {
+	diags := []protocol.Diagnostic{}
+
+	for _, include := range doc.Includes {
+		if !include.IsValid {
+			diags = append(diags, NewDiagnosticFromRange(include.Range, fmt.Sprintf("Couldn't locate `%s` in filesystem", *include.Original)))
 		}
 	}
 

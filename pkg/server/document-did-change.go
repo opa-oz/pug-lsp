@@ -19,6 +19,12 @@ func (s *Server) TextDocumentDidChange(ctx *glsp.Context, params *protocol.DidCh
 		return nil
 	}
 
+	if !doc.NeedToRefreshIncludes {
+		doc.NeedToRefreshIncludes = true
+
+		s.documentStore.RefreshIncludes(context.Background(), doc, false)
+	}
+
 	if !doc.NeedToRefreshDiagnostics {
 		doc.NeedToRefreshDiagnostics = true
 		go func() {

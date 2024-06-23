@@ -13,8 +13,9 @@ func (s *Server) TextDocumentDidOpen(ctx *glsp.Context, params *protocol.DidOpen
 	if err != nil {
 		return err
 	}
-	s.documentStore.RefreshIncludes(context.Background(), doc)
 	go func() {
+		s.documentStore.RefreshIncludes(context.Background(), doc, false)
+
 		diags := s.documentStore.RefreshDiagnostics(doc, false)
 		if diags != nil && len(*diags) > 0 {
 			go ctx.Notify(protocol.ServerTextDocumentPublishDiagnostics, protocol.PublishDiagnosticsParams{
