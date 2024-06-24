@@ -4,6 +4,9 @@ An implementation of the Language Protocol Server for [Pug.js](https://pugjs.org
 
 <!-- toc -->
 
+- [Installation](#installation)
+  * [Neovim](#neovim)
+  * [Manually](#manually)
 - [Features](#features)
   * [Note](#note)
   * [Freestyle](#freestyle)
@@ -25,6 +28,28 @@ An implementation of the Language Protocol Server for [Pug.js](https://pugjs.org
 - [Thanks](#thanks)
 
 <!-- tocstop -->
+
+## Installation
+
+### Neovim
+
+1. Search for `pug` in [mason.nvim](https://github.com/williamboman/mason.nvim)
+2. Setup using [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig):
+
+```lua
+require("lspconfig").pug.setup({})
+```
+
+### Manually
+
+Pug-LSP can be installed via 
+```bash
+go get github.com/opa-oz/pug-lsp
+``` 
+
+or manually downloaded from [releases page](https://github.com/opa-oz/pug-lsp/releases)
+
+
 
 ## Features
 
