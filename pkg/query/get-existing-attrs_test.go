@@ -47,5 +47,5 @@ func TestGetExistingAttributes(t *testing.T) {
 		keys[i] = key
 		i++
 	}
-	assert.Equal(t, keys, []string{"style", "class"})
+	assert.ElementsMatch(t, keys, []string{"style", "class"})
 }
