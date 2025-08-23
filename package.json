@@ -1,0 +1,22 @@
+{
+  "name": "pug-lsp",
+  "version": "1.0.0",
+  "description": "An implementation of the Language Protocol Server for [Pug.js](https://pugjs.org)",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/opa-oz/pug-lsp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/opa-oz/pug-lsp/issues"
+  },
+  "homepage": "https://github.com/opa-oz/pug-lsp#readme"
+}
